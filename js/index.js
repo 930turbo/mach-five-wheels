@@ -1,8 +1,7 @@
 // =====================================================
 // Mach Five Wheels — Main JS (Index)
 // Header/Footer, Hero Slider, Zip Modal, Feature Gallery
-// + Force scroll to top on refresh / navigation
-// + Final header UI sync (burger only on mobile)
+// + Hard-forced header breakpoint control (inline !important)
 // =====================================================
 
 "use strict";
@@ -27,60 +26,45 @@ document.addEventListener("DOMContentLoaded", () => {
       html.style.scrollBehavior = prev || "";
     });
   };
-
-  // On full load and when restored from bfcache
   window.addEventListener("load", toTop);
-  window.addEventListener("pageshow", () => {
-    toTop();
-  });
-
-  // If anchors yank you on first paint, you can strip the hash:
-  /*
-  if (location.hash) {
-    history.replaceState(null, "", location.pathname + location.search);
-  }
-  */
+  window.addEventListener("pageshow", () => { toTop(); });
 
   // ------------------------------
   // Inject Header & Footer
   // ------------------------------
   const headerPromise = fetch(`${base}partials/header.html`)
-    .then(res => res.text())
+    .then(r => r.text())
     .then(html => {
-      const headerEl = document.getElementById("header");
-      if (!headerEl) return;
-      headerEl.innerHTML = html;
+      const headerMount = document.getElementById("header");
+      if (!headerMount) return;
+      headerMount.innerHTML = html;
 
-      // Home-only add-on under logo
+      // Home-only button under logo
       const isHome = location.pathname === "/" || location.pathname.endsWith("/index.html");
       if (isHome) {
         const logoDiv = document.querySelector(".logo");
         if (logoDiv && !logoDiv.querySelector(".main-site-btn")) {
-          const btnWrapper = document.createElement("div");
-          btnWrapper.className = "header-link-wrapper";
-          btnWrapper.innerHTML = `
-            <a href="https://machfivemotors.com"
-               class="main-site-btn"
-               target="_blank"
-               rel="noopener">
+          const wrap = document.createElement("div");
+          wrap.className = "header-link-wrapper";
+          wrap.innerHTML = `
+            <a href="https://machfivemotors.com" class="main-site-btn" target="_blank" rel="noopener">
               Explore Mach Five
             </a>`;
-          logoDiv.appendChild(btnWrapper);
+          logoDiv.appendChild(wrap);
         }
       }
 
-      // === Mobile Menu Setup ===
+      // ====== Mobile Drawer ======
       const burger = document.querySelector(".hamburger");
       const menu   = document.getElementById("mobileMenu");
       const list   = menu?.querySelector(".mobile-menu__list");
       const close  = menu?.querySelector(".mobile-menu__close");
 
       if (burger && menu && list) {
-        // Build list from left/right navs present in injected header
+        // Build drawer links from current header navs
         const left  = Array.from(document.querySelectorAll(".nav-left a"));
         const right = Array.from(document.querySelectorAll(".nav-right a"));
         const all   = [...left, ...right];
-
         list.innerHTML = all.map(a => {
           const href = a.getAttribute("href") || "#";
           const text = (a.textContent || href).trim();
@@ -88,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }).join("");
 
         const openMenu = () => {
+          // Show + animate in
           menu.hidden = false;
           requestAnimationFrame(() => {
             menu.classList.add("open");
@@ -99,8 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
           menu.classList.remove("open");
           burger.setAttribute("aria-expanded", "false");
           document.body.classList.remove("menu-open");
-          // Wait for transition before hiding
-          setTimeout(() => (menu.hidden = true), 280);
+          setTimeout(() => { menu.hidden = true; }, 280);
         };
 
         burger.addEventListener("click", () => {
@@ -111,53 +95,70 @@ document.addEventListener("DOMContentLoaded", () => {
         menu.addEventListener("click", (e) => {
           if (e.target === menu || e.target.hasAttribute("data-close")) closeMenu();
         });
-        // Close on ESC
         window.addEventListener("keydown", (e) => {
           if (e.key === "Escape" && !menu.hidden) closeMenu();
         });
-        // Close after navigating
         list.addEventListener("click", (e) => {
           const a = e.target.closest("a");
           if (a) closeMenu();
         });
 
-        // --- Final UI sync so burger/menus never appear together ---
-        const syncHeaderUI = () => {
+        // ====== HARD BREAKPOINT ENFORCER (inline !important) ======
+        const navLeft  = document.querySelector(".nav-left");
+        const navRight = document.querySelector(".nav-right");
+
+        const forceShow = (el, disp = "flex") => el?.style.setProperty("display", disp, "important");
+        const forceHide = (el) => el?.style.setProperty("display", "none", "important");
+
+        const applyHeaderBreakpoint = () => {
           const isMobile = window.matchMedia("(max-width: 900px)").matches;
-          if (!isMobile) {
-            // desktop: make sure drawer is closed and burger looks collapsed
+
+          if (isMobile) {
+            // Mobile: burger visible, wide navs hidden
+            forceShow(burger, "inline-flex");
+            forceHide(navLeft);
+            forceHide(navRight);
+          } else {
+            // Desktop: burger hidden, wide navs visible, drawer closed
+            forceHide(burger);
+            forceShow(navLeft, "flex");
+            forceShow(navRight, "flex");
+            // Close drawer if it was open
             burger.setAttribute("aria-expanded", "false");
             document.body.classList.remove("menu-open");
-            if (menu) { menu.classList.remove("open"); menu.hidden = true; }
+            menu.classList.remove("open");
+            menu.hidden = true;
           }
-          // mobile: CSS already hides wide navs & shows burger; no-op
         };
 
-        // run once after header inject
-        syncHeaderUI();
-        // keep in sync on resize/orientation changes
-        window.addEventListener("resize", syncHeaderUI);
-        window.addEventListener("orientationchange", syncHeaderUI);
+        // Run now and keep synced
+        applyHeaderBreakpoint();
+        window.addEventListener("resize", applyHeaderBreakpoint);
+        window.addEventListener("orientationchange", applyHeaderBreakpoint);
+
+        // Fallback: also re-apply after fonts/layout settle
+        setTimeout(applyHeaderBreakpoint, 0);
+        setTimeout(applyHeaderBreakpoint, 150);
+        setTimeout(applyHeaderBreakpoint, 600);
       }
     })
-    .catch(() => { /* no-op */ });
+    .catch(() => {});
 
   const footerPromise = fetch(`${base}partials/footer.html`)
-    .then(res => res.text())
+    .then(r => r.text())
     .then(html => {
-      const footerEl = document.getElementById("footer");
-      if (!footerEl) return;
-      footerEl.innerHTML = html;
+      const footerMount = document.getElementById("footer");
+      if (!footerMount) return;
+      footerMount.innerHTML = html;
     })
-    .catch(() => { /* no-op */ });
+    .catch(() => {});
 
-  // After both injects, re-assert top (in case layout shift moved it)
   Promise.allSettled([headerPromise, footerPromise]).then(() => {
     requestAnimationFrame(() => toTop());
   });
 
   // ------------------------------
-  // Hero Slider (dots + progress + swipe + keyboard) — no arrows
+  // Hero Slider (dots + progress + swipe + keyboard)
   // ------------------------------
   (function initHeroSlider() {
     const sliderEl = document.querySelector(".hero-slider");
@@ -169,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!slides.length || !dots.length || !bar) return;
 
     let index = 0;
-    const intervalMs = 4000; // match CSS --hero-interval
+    const intervalMs = 4000;
     let timer;
 
     const setActive = (i) => {
@@ -184,7 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
           bar.style.width = "100%";
         });
       });
-
       index = i;
     };
 
@@ -259,38 +259,33 @@ document.addEventListener("DOMContentLoaded", () => {
   })();
 
   // ------------------------------
-  // Index — Feature Gallery (Updated)
+  // Index — Feature Gallery / Lightbox
   // ------------------------------
   (function initIndexGallery() {
-    // Wait until gallery exists in DOM
-    const waitForGallery = setInterval(() => {
+    const wait = setInterval(() => {
       const grid =
         document.getElementById("homeGallery") ||
         document.querySelector(".gallery-grid") ||
         document.querySelector(".gallery-section");
-
       if (!grid) return;
 
-      clearInterval(waitForGallery);
+      clearInterval(wait);
 
       // Reveal-on-scroll
-      const revealTiles = grid.querySelectorAll(".gallery-item.reveal, .tile-btn.reveal");
-      if (revealTiles.length) {
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((e) => {
-              if (e.isIntersecting) {
-                e.target.classList.add("is-in");
-                io.unobserve(e.target);
-              }
-            });
-          },
-          { rootMargin: "0px 0px -10% 0px", threshold: 0.15 }
-        );
-        revealTiles.forEach((el) => io.observe(el));
+      const reveal = grid.querySelectorAll(".gallery-item.reveal, .tile-btn.reveal");
+      if (reveal.length) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.classList.add("is-in");
+              io.unobserve(e.target);
+            }
+          });
+        }, { rootMargin: "0px 0px -10% 0px", threshold: 0.15 });
+        reveal.forEach(el => io.observe(el));
       }
 
-      // Lightbox elements
+      // Lightbox
       const lightbox =
         document.getElementById("hgLightbox") ||
         document.getElementById("lightbox");
@@ -303,7 +298,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!(lightbox && largeImg)) return;
 
-      // Open lightbox
       const open = (src) => {
         if (!src) return;
         largeImg.src = src;
@@ -312,8 +306,6 @@ document.addEventListener("DOMContentLoaded", () => {
         lightbox.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
       };
-
-      // Close lightbox
       const close = () => {
         lightbox.classList.remove("is-open");
         lightbox.setAttribute("aria-hidden", "true");
@@ -322,24 +314,16 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.style.overflow = "";
       };
 
-      // Image click closes lightbox too
       largeImg.addEventListener("click", close);
-
       grid.addEventListener("click", (e) => {
         const anchor = e.target.closest('a[href="#"]');
         if (anchor) { e.preventDefault(); return; }
-
         const tile = e.target.closest(".gallery-item, .tile-btn");
         if (!tile) return;
-
         const imgEl = tile.querySelector("img");
-        const src =
-          tile.getAttribute("data-full") ||
-          (imgEl && (imgEl.currentSrc || imgEl.src));
-
+        const src = tile.getAttribute("data-full") || (imgEl && (imgEl.currentSrc || imgEl.src));
         open(src);
       });
-
       closeBtn?.addEventListener("click", close);
       lightbox.addEventListener("click", (e) => {
         if (e.target.hasAttribute("data-close") || e.target === lightbox) close();
