@@ -14,20 +14,13 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 
-<body>
+<!-- 👇 add class="home" so we can scope header overrides to ONLY this page -->
+<body class="home">
   <!-- HEADER (injected) -->
   <header id="header"></header>
 
   <!-- HERO -->
   <section class="hero-slider" aria-label="Featured">
-    <!-- Left-justified logo + Explore (home-only) -->
-    <div class="hero-left-rail">
-      <a href="/index.html" class="hero-left-logo" aria-label="Mach Five Wheels">
-        <img src="/assets/logos/machfivelogo.png" alt="Mach Five Wheels Logo" />
-      </a>
-      <a href="https://machfivemotors.com" class="hero-left-main-site">Explore Mach Five</a>
-    </div>
-
     <div class="slides" id="heroSlides">
       <!-- Slide 1 -->
       <div class="slide active">

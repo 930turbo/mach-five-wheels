@@ -233,3 +233,58 @@ body.menu-open{ overflow: hidden; }
   .logo{ flex: 1 1 auto; }
   .nav-container{ justify-content: space-between; }
 }
+
+/* ===== HOME-ONLY HEADER OVERRIDES ===== */
+body.home .nav-container {
+  /* keep flex, but control order */
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+/* Put the logo group first, then left nav, then right nav, then burger */
+body.home .logo { order: 0; }
+body.home .nav-left { order: 1; }
+body.home .nav-right { order: 2; }
+body.home .hamburger { order: 3; }
+
+/* Make the logo area truly left-justified (no centering) */
+body.home .logo {
+  justify-content: flex-start !important;
+  align-items: center;
+}
+
+/* If your index.js injects the Main Site button into the logo wrapper,
+   keep it tight and on the left */
+body.home .logo .header-link-wrapper {
+  margin-left: .75rem;
+  display: inline-flex;
+}
+body.home .logo .main-site-btn {
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: .05em;
+  padding: .5rem .9rem;
+  border: 1px solid var(--m5-text);
+  color: var(--m5-text);
+  text-decoration: none;
+  transition: background .25s ease, color .25s ease, border-color .25s ease;
+  line-height: 1;
+}
+
+/* Hover state (desktop) */
+@media (hover:hover) and (pointer:fine) {
+  body.home .logo .main-site-btn:hover {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+  }
+}
+
+/* Hide ONLY the Explore/Main Site button on mobile */
+@media (max-width: 768px) {
+  body.home .logo .main-site-btn { display: none !important; }
+}
+
+/* Optional: tighten left nav padding so logo + button are the farthest-left items */
+body.home .nav-left { padding-left: 0; }
