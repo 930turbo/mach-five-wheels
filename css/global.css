@@ -313,3 +313,73 @@ body.menu-open{ overflow: hidden; }
     display: none !important;
   }
 }
+
+/* =========================
+   QUICK FIXES / OVERRIDES
+   ========================= */
+
+/* 1) Burger should NOT show on desktop */
+.site-header .hamburger {
+  display: none;               /* desktop default */
+}
+@media (max-width: 900px){
+  .site-header .hamburger {    /* mobile only */
+    display: grid;
+  }
+}
+
+/* 2) Stop cutting off the logo anywhere */
+.logo { 
+  overflow: visible !important; 
+}
+.logo a, 
+.logo img {
+  display: block;
+}
+
+/* 3) HOME PAGE (desktop/tablet): logo hard-left and larger */
+body.home .nav-container {
+  justify-content: flex-start;       /* line up from the left */
+  gap: 2rem;
+}
+body.home .logo {
+  order: -1;                         /* put logo first visually */
+  margin-right: 2rem;
+  justify-content: flex-start !important;
+  align-items: center;
+}
+body.home .logo a img {
+  height: 60px;                      /* bump size on home */
+  width: auto;
+}
+
+/* Keep normal size on other pages (desktop) */
+body:not(.home) .logo a img {
+  height: 48px;                      /* you can tweak to match “larger” target */
+  width: auto;
+}
+
+/* 4) Mobile behavior stays: logo flush-left, larger on home */
+@media (max-width: 900px){
+  .site-header .nav-container{
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+  }
+  .logo{
+    justify-content: flex-start !important;
+    align-items: center;
+  }
+  .logo a img{
+    height: 48px;
+    width: auto;
+    object-fit: contain;             /* prevent any crop */
+  }
+  body.home .logo a img{
+    height: 60px;                    /* home bigger on mobile */
+  }
+  .site-header .nav-left,
+  .site-header .nav-right{
+    display: none !important;        /* ensure wide navs are hidden on mobile */
+  }
+}
