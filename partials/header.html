@@ -2,39 +2,32 @@
 <header class="site-header">
   <div class="nav-container">
     <!-- Left navigation -->
-    <nav class="nav-left">
+    <nav class="nav-left" aria-label="Primary">
       <a href="/pages/catalog.html">Catalog</a>
       <a href="/pages/about.html">About</a>
     </nav>
 
-    <!-- Logo (button may be appended here by index.js) -->
+    <!-- Logo -->
     <div class="logo">
       <a href="/index.html">
         <img src="/assets/logos/machfivelogo.png" alt="Mach Five Wheels Logo" />
       </a>
-      <!-- JS can insert:
-      <div class="header-link-wrapper">
-        <a class="main-site-btn" href="https://machfivemotors.com" target="_blank" rel="noopener">
-          Explore Mach Five
-        </a>
-      </div>
-      -->
     </div>
 
     <!-- Right navigation -->
-    <nav class="nav-right">
+    <nav class="nav-right" aria-label="Secondary">
       <a href="/pages/events.html">Events</a>
       <a href="/pages/contact.html">Contact</a>
     </nav>
 
-    <!-- Hamburger (visible under 900px via CSS) -->
-    <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+    <!-- Hamburger (hidden by default; shown only <900px via CSS below) -->
+    <button class="hamburger" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
 </header>
 
-<!-- Mobile Drawer (populated by index.js from .nav-left/.nav-right) -->
+<!-- Mobile Drawer -->
 <div id="mobileMenu" class="mobile-menu" hidden>
   <div class="mobile-menu__backdrop" data-close></div>
   <div class="mobile-menu__panel">
