@@ -1978,3 +1978,58 @@ html, body { overflow-x: hidden; max-width: 100%; }
   border-color: rgba(210,177,90,.35);
   background: rgba(255,255,255,.1);
 }
+
+/* === Home hero: left rail (logo + Explore Mach Five) === */
+.hero-slider {
+  position: relative;
+}
+
+.hero-left-rail {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 15;                   /* above slide media/text */
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hero-left-logo img {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+/* Button styling mirrors your transparent buttons but left-justified */
+.hero-left-main-site {
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid #fff;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+.hero-left-main-site:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* Hide Explore Mach Five ONLY on mobile */
+@media (max-width: 768px) {
+  .hero-left-main-site {
+    display: none;
+  }
+  .hero-left-rail {
+    top: 1.25rem;
+    left: 1rem;
+  }
+  .hero-left-logo img {
+    height: 40px;
+  }
+}

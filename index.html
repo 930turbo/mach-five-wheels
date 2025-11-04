@@ -10,8 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/index.css" />
   <script src="js/index.js" defer></script>
-  <link rel="stylesheet" href="/css/global.css">
-
+  <link rel="stylesheet" href="/css/global.css" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 
@@ -21,6 +20,14 @@
 
   <!-- HERO -->
   <section class="hero-slider" aria-label="Featured">
+    <!-- Left-justified logo + Explore (home-only) -->
+    <div class="hero-left-rail">
+      <a href="/index.html" class="hero-left-logo" aria-label="Mach Five Wheels">
+        <img src="/assets/logos/machfivelogo.png" alt="Mach Five Wheels Logo" />
+      </a>
+      <a href="https://machfivemotors.com" class="hero-left-main-site">Explore Mach Five</a>
+    </div>
+
     <div class="slides" id="heroSlides">
       <!-- Slide 1 -->
       <div class="slide active">
@@ -76,10 +83,10 @@
           </div>
           <div class="series-info">
             <h3><strong>Forged </strong>Monoblock</h3>
-            <p> Our 1-Piece Forged Monoblock wheels are engineered for uncompromising performance, balancing strength,
-              weight, and aesthetics in one seamless form.
-              Each design undergoes extensive FEA testing, precision machining, and motorsport-grade finishing to
-              deliver maximum responsiveness and visual impact on both street and track.</p>
+            <p>Our 1-Piece Forged Monoblock wheels are engineered for uncompromising performance, balancing strength,
+              weight, and aesthetics in one seamless form. Each design undergoes extensive FEA testing, precision
+              machining, and motorsport-grade finishing to deliver maximum responsiveness and visual impact on both
+              street and track.</p>
           </div>
         </a>
       </div>
@@ -95,10 +102,9 @@
           <div class="series-info">
             <h3><strong>Forged </strong>2-Piece FMWC®</h3>
             <p>Utilizing our advanced forging technology, FMWC® wheels deliver unmatched strength-to-weight performance
-              in a modular design.
-              Precision-engineered centers and lightweight barrels are paired for optimal stiffness and heat
-              dissipation, making them the choice for discerning enthusiasts
-              demanding race-proven capability and timeless elegance.</p>
+              in a modular design. Precision-engineered centers and lightweight barrels are paired for optimal stiffness
+              and heat dissipation, making them the choice for discerning enthusiasts demanding race-proven capability
+              and timeless elegance.</p>
           </div>
         </a>
       </div>
@@ -132,12 +138,10 @@
     <div class="about-text">
       <span class="eyebrow">ENGINEERING</span>
       <h2 id="eng-title">Engineering Without Compromise</h2>
-      <p>
-        We start at first principles—vehicle, brakes, tire, and duty cycle—then engineer pad and barrel architecture
+      <p>We start at first principles—vehicle, brakes, tire, and duty cycle—then engineer pad and barrel architecture
         with FEA to balance stiffness, heat flow, and unsprung mass. Every profile is iterated through prototypes and
         track-grade validation before it earns our name. Built-to-order, finished by humans, and measured to motorsport
-        tolerances.
-      </p>
+        tolerances.</p>
       <a href="pages/about.html#process" class="btn-transparent">Inside the Process</a>
     </div>
 
@@ -145,7 +149,6 @@
       <img src="assets/images/engineering.jpg" alt="Mach Five engineering process" />
     </div>
   </section>
-
 
   <!-- Instagram Luxe Section -->
   <section class="instagram-luxe">
@@ -165,8 +168,7 @@
 
     <div class="gallery-grid">
       <!-- LEFT: big tile spans two rows -->
-      <button type="button" class="gallery-item gallery-left" data-full="assets/images/cre1.JPG"
-        aria-label="Open image">
+      <button type="button" class="gallery-item gallery-left" data-full="assets/images/cre1.JPG" aria-label="Open image">
         <img src="assets/images/cre1.JPG" alt="Gallery image" />
       </button>
 
@@ -194,7 +196,6 @@
       <button type="button" class="lightbox-close" aria-label="Close" data-close>&times;</button>
     </figure>
   </div>
-
 
   <!-- DEALER LOCATOR CTA -->
   <section class="dealer-cta">
