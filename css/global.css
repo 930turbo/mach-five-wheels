@@ -383,3 +383,63 @@ body:not(.home) .logo a img {
     display: none !important;        /* ensure wide navs are hidden on mobile */
   }
 }
+
+
+/* =========================
+   HEADER TWEAKS
+   ========================= */
+
+/* 1) Desktop & larger: keep LOGO + Explore button centered */
+@media (min-width: 901px){
+  .nav-container{
+    justify-content: center;       /* centers the middle column */
+    gap: 2rem;
+  }
+  .nav-left, .nav-right{
+    flex: 1 1 0;                   /* equal wings so center stays centered */
+  }
+  .logo{
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center !important;
+    overflow: visible !important;
+    text-align: center;
+  }
+  /* If your injected Explore button sits inside .logo, center it too */
+  .logo .header-link-wrapper{
+    display: flex;
+    justify-content: center;
+    margin-top: .35rem;
+  }
+}
+
+/* 2) Mobile: nudge logo slightly right so it’s not clipped on the left,
+      and respect notches/safe areas */
+@media (max-width: 900px){
+  .site-header .nav-container{
+    padding-left: max(10px, env(safe-area-inset-left)); /* tiny left gutter */
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+  .logo{
+    overflow: visible !important;
+    padding-left: 2px;                 /* micro offset */
+  }
+  .logo a img{
+    transform: translateX(2px);        /* “smidge” shift right */
+    height: 48px;                      /* your mobile size */
+    width: auto;
+    object-fit: contain;
+  }
+  body.home .logo a img{
+    height: 60px;                      /* larger on home (mobile) */
+  }
+}
+
+/* 3) Safety: burger stays hidden on desktop */
+.site-header .hamburger{ display: none; }
+@media (max-width: 900px){
+  .site-header .hamburger{ display: grid; }
+}
+
+/* 4) Never crop the logo anywhere */
+.logo{ overflow: visible !important; }
