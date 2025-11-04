@@ -1,16 +1,9 @@
 <header class="site-header">
   <div class="nav-container">
-    <!-- Hamburger (mobile only) -->
-    <button class="hamburger" aria-label="Open menu" aria-controls="primary-nav" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-
-    <!-- Left + Right combined for mobile -->
-    <nav class="nav-links" id="primary-nav" hidden>
+    <!-- Left navigation (desktop) -->
+    <nav class="nav-left">
       <a href="/pages/catalog.html">Catalog</a>
       <a href="/pages/about.html">About</a>
-      <a href="/pages/events.html">Events</a>
-      <a href="/pages/contact.html">Contact</a>
     </nav>
 
     <!-- Logo (center) -->
@@ -18,21 +11,31 @@
       <a href="/index.html">
         <img src="/assets/logos/machfivelogo.png" alt="Mach Five Wheels Logo" />
       </a>
-      <!-- JS will insert header-link-wrapper here -->
+      <!-- header.js inserts:
+      <div class="header-link-wrapper">
+        <a class="main-site-btn" href="https://machfivemotors.com">Back to Mach Five Motors</a>
+      </div>
+      -->
     </div>
 
-    <!-- Desktop left/right stay for large screens -->
-    <nav class="nav-left desktop-only">
-      <a href="/pages/catalog.html">Catalog</a>
-      <a href="/pages/about.html">About</a>
-    </nav>
-
-    <nav class="nav-right desktop-only">
+    <!-- Right navigation (desktop) -->
+    <nav class="nav-right">
       <a href="/pages/events.html">Events</a>
       <a href="/pages/contact.html">Contact</a>
     </nav>
+
+    <!-- Mobile-only hamburger -->
+    <button class="hamburger" aria-label="Open menu" aria-controls="primary-nav" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 
-  <!-- Clickable backdrop for mobile drawer -->
+  <!-- Mobile drawer + scrim (mobile only; hidden by default) -->
+  <nav class="nav-links" id="primary-nav" hidden>
+    <a href="/pages/catalog.html">Catalog</a>
+    <a href="/pages/about.html">About</a>
+    <a href="/pages/events.html">Events</a>
+    <a href="/pages/contact.html">Contact</a>
+  </nav>
   <div class="nav-scrim" hidden></div>
 </header>

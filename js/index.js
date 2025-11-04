@@ -328,3 +328,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const header = document.querySelector('.site-header');
+  const btn = header?.querySelector('.hamburger');
+  const drawer = header?.querySelector('#primary-nav');
+  const scrim = header?.querySelector('.nav-scrim');
+
+  if (!header || !btn || !drawer || !scrim) return;
+
+  const openMenu = () => {
+    header.classList.add('menu-open');
+    btn.setAttribute('aria-expanded', 'true');
+    drawer.hidden = false;
+    scrim.hidden = false;
+    const firstLink = drawer.querySelector('a');
+    firstLink && firstLink.focus();
+    document.documentElement.style.overflow = 'hidden';
+  };
+
+  const closeMenu = () => {
+    header.classList.remove('menu-open');
+    btn.setAttribute('aria-expanded', 'false');
+    setTimeout(() => { drawer.hidden = true; scrim.hidden = true; }, 250);
+    document.documentElement.style.overflow = '';
+  };
+
+  btn.addEventListener('click', () => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    expanded ? closeMenu() : openMenu();
+  });
+
+  scrim.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+
+  // Close on nav click (mobile)
+  drawer.addEventListener('click', (e) => {
+    if (e.target instanceof HTMLAnchorElement) closeMenu();
+  });
+});
