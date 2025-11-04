@@ -1,27 +1,38 @@
 <header class="site-header">
   <div class="nav-container">
-    <!-- Left navigation -->
-    <nav class="nav-left">
+    <!-- Hamburger (mobile only) -->
+    <button class="hamburger" aria-label="Open menu" aria-controls="primary-nav" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <!-- Left + Right combined for mobile -->
+    <nav class="nav-links" id="primary-nav" hidden>
       <a href="/pages/catalog.html">Catalog</a>
       <a href="/pages/about.html">About</a>
+      <a href="/pages/events.html">Events</a>
+      <a href="/pages/contact.html">Contact</a>
     </nav>
 
-    <!-- Logo (button will be appended here by index.js) -->
+    <!-- Logo (center) -->
     <div class="logo">
       <a href="/index.html">
         <img src="/assets/logos/machfivelogo.png" alt="Mach Five Wheels Logo" />
       </a>
-      <!-- JS will insert
-      <div class="header-link-wrapper">
-        <a class="main-site-btn" href="https://machfivemotors.com">Back to Mach Five Motors</a>
-      </div>
-      -->
+      <!-- JS will insert header-link-wrapper here -->
     </div>
 
-    <!-- Right navigation -->
-    <nav class="nav-right">
+    <!-- Desktop left/right stay for large screens -->
+    <nav class="nav-left desktop-only">
+      <a href="/pages/catalog.html">Catalog</a>
+      <a href="/pages/about.html">About</a>
+    </nav>
+
+    <nav class="nav-right desktop-only">
       <a href="/pages/events.html">Events</a>
       <a href="/pages/contact.html">Contact</a>
     </nav>
   </div>
+
+  <!-- Clickable backdrop for mobile drawer -->
+  <div class="nav-scrim" hidden></div>
 </header>
