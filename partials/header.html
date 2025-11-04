@@ -1,3 +1,4 @@
+<!-- partials/header.html -->
 <header class="site-header">
   <div class="nav-container">
     <!-- Left navigation -->
@@ -6,14 +7,16 @@
       <a href="/pages/about.html">About</a>
     </nav>
 
-    <!-- Logo (button will be appended here by index.js) -->
+    <!-- Logo (button may be appended here by index.js) -->
     <div class="logo">
       <a href="/index.html">
         <img src="/assets/logos/machfivelogo.png" alt="Mach Five Wheels Logo" />
       </a>
-      <!-- JS will insert
+      <!-- JS can insert:
       <div class="header-link-wrapper">
-        <a class="main-site-btn" href="https://machfivemotors.com">Back to Mach Five Motors</a>
+        <a class="main-site-btn" href="https://machfivemotors.com" target="_blank" rel="noopener">
+          Explore Mach Five
+        </a>
       </div>
       -->
     </div>
@@ -23,5 +26,19 @@
       <a href="/pages/events.html">Events</a>
       <a href="/pages/contact.html">Contact</a>
     </nav>
+
+    <!-- Hamburger (visible under 900px via CSS) -->
+    <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+
+<!-- Mobile Drawer (populated by index.js from .nav-left/.nav-right) -->
+<div id="mobileMenu" class="mobile-menu" hidden>
+  <div class="mobile-menu__backdrop" data-close></div>
+  <div class="mobile-menu__panel">
+    <button class="mobile-menu__close" aria-label="Close" data-close>&times;</button>
+    <ul class="mobile-menu__list"></ul>
+  </div>
+</div>
