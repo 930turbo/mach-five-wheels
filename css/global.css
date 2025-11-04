@@ -234,57 +234,47 @@ body.menu-open{ overflow: hidden; }
   .nav-container{ justify-content: space-between; }
 }
 
-/* ===== HOME-ONLY HEADER OVERRIDES ===== */
-body.home .nav-container {
-  /* keep flex, but control order */
-  display: flex;
-  align-items: center;
-  gap: .75rem;
-}
+/* ===========================
+   HEADER — MOBILE FIXES ONLY
+   =========================== */
+@media (max-width: 900px) {
+  /* keep hamburger visible per your rules, push it to the far right */
+  .site-header .hamburger { display: grid; margin-left: auto; }
 
-/* Put the logo group first, then left nav, then right nav, then burger */
-body.home .logo { order: 0; }
-body.home .nav-left { order: 1; }
-body.home .nav-right { order: 2; }
-body.home .hamburger { order: 3; }
+  /* hide wide navs on mobile (already in your css, safe to reassert) */
+  .site-header .nav-left,
+  .site-header .nav-right { display: none; }
 
-/* Make the logo area truly left-justified (no centering) */
-body.home .logo {
-  justify-content: flex-start !important;
-  align-items: center;
-}
-
-/* If your index.js injects the Main Site button into the logo wrapper,
-   keep it tight and on the left */
-body.home .logo .header-link-wrapper {
-  margin-left: .75rem;
-  display: inline-flex;
-}
-body.home .logo .main-site-btn {
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: .05em;
-  padding: .5rem .9rem;
-  border: 1px solid var(--m5-text);
-  color: var(--m5-text);
-  text-decoration: none;
-  transition: background .25s ease, color .25s ease, border-color .25s ease;
-  line-height: 1;
-}
-
-/* Hover state (desktop) */
-@media (hover:hover) and (pointer:fine) {
-  body.home .logo .main-site-btn:hover {
-    background: #fff;
-    color: #000;
-    border-color: #fff;
+  /* left-justify the header row on mobile so the logo sits flush-left */
+  .nav-container {
+    justify-content: flex-start;   /* instead of space-between */
+    gap: .75rem;
   }
-}
 
-/* Hide ONLY the Explore/Main Site button on mobile */
-@media (max-width: 768px) {
-  body.home .logo .main-site-btn { display: none !important; }
-}
+  /* make the logo truly left on all pages (mobile only) */
+  .logo {
+    flex: 0 0 auto;
+    justify-content: flex-start !important;
+    align-items: center;
+  }
 
-/* Optional: tighten left nav padding so logo + button are the farthest-left items */
-body.home .nav-left { padding-left: 0; }
+  /* default mobile logo size for non-home pages */
+  .logo a img {
+    height: 48px;
+    width: auto;
+  }
+
+  /* HOME ONLY: make the logo larger on mobile */
+  body.home .logo a img {
+    height: 56px; /* tweak as you like: 56–64px looks good */
+  }
+
+  /* hide the Explore/Main-site button that gets injected near the logo */
+  .logo .main-site-btn {
+    display: none !important;
+  }
+
+  /* remove extra left padding from the left nav container on mobile
+     (even though it’s hidden, this prevents layout shove when toggling) */
+  .nav-left { padding-left: 0 !important; }
+}
