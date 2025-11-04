@@ -1803,3 +1803,72 @@ html, body { overflow-x: hidden; max-width: 100%; }
     transition: none !important;
   }
 }
+
+/* ========= BURGER OPEN STATE POLISH (strong selectors) ========= */
+.site-header .hamburger[aria-expanded="true"]{
+  border-color: rgba(210,177,90,0.45) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03)) !important;
+  box-shadow:
+    0 0 0 1px rgba(210,177,90,0.25) inset,
+    0 10px 34px rgba(210,177,90,0.18),
+    0 18px 60px rgba(0,0,0,.45) !important;
+}
+.site-header .hamburger[aria-expanded="true"] span{
+  background: #d2b15a !important;
+  box-shadow: 0 0 8px rgba(210,177,90,.35) !important;
+}
+
+/* if your X isn’t animating, re-assert the transforms */
+.site-header .hamburger[aria-expanded="true"] span:nth-child(1){ transform: translateY(7px) rotate(45deg) !important; }
+.site-header .hamburger[aria-expanded="true"] span:nth-child(2){ opacity: 0 !important; }
+.site-header .hamburger[aria-expanded="true"] span:nth-child(3){ transform: translateY(-7px) rotate(-45deg) !important; }
+
+
+/* ========= ENGINEERING SECTION: FIX OVERFLOW + MOBILE ORDER ========= */
+
+/* guard against any width creep */
+.about--engineer { overflow-x: clip; }
+
+/* mobile/tablet: stack, image below text, no overflow */
+@media (max-width: 980px){
+  .about--engineer{
+    display: flex;                 /* keep flex, just stack */
+    flex-direction: column;        /* text first, image second */
+    flex-wrap: nowrap;             /* direction column means no side overflow */
+    align-items: stretch;
+    gap: 1rem;
+    padding: 2rem 1rem;            /* slightly tighter padding on small screens */
+  }
+  .about--engineer .about-text{
+    order: 1;
+    min-width: 0;                  /* allow shrinking */
+  }
+  .about--engineer .about-image{
+    order: 2;                      /* 👈 image below text */
+    min-width: 0;
+  }
+  .about--engineer .about-image img{
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+}
+
+/* desktop: keep side-by-side but prevent overflow from large images */
+@media (min-width: 981px){
+  .about--engineer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2.25rem;
+    padding: 4rem 2rem;
+    overflow-x: clip;
+  }
+  .about--engineer .about-text{ flex: 1 1 50%; min-width: 280px; }
+  .about--engineer .about-image{ flex: 1 1 20%; min-width: 280px; }
+  .about--engineer .about-image img{
+    max-width: 100%;
+    height: auto;
+  }
+}
