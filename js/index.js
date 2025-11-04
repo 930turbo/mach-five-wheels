@@ -1,7 +1,7 @@
 // =====================================================
 // Mach Five Wheels — Main JS (Index)
 // Header/Footer, Hero Slider, Zip Modal, Feature Gallery
-// + Hard-forced header breakpoint control (inline !important)
+// + Burger/Drawer (close on outside click) + Hard breakpoint
 // =====================================================
 
 "use strict";
@@ -35,9 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const headerPromise = fetch(`${base}partials/header.html`)
     .then(r => r.text())
     .then(html => {
-      const headerMount = document.getElementById("header");
-      if (!headerMount) return;
-      headerMount.innerHTML = html;
+      const mount = document.getElementById("header");
+      if (!mount) return;
+      mount.innerHTML = html;
 
       // Home-only button under logo
       const isHome = location.pathname === "/" || location.pathname.endsWith("/index.html");
@@ -54,14 +54,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // ====== Mobile Drawer ======
-      const burger = document.querySelector(".hamburger");
-      const menu   = document.getElementById("mobileMenu");
-      const list   = menu?.querySelector(".mobile-menu__list");
-      const close  = menu?.querySelector(".mobile-menu__close");
+      // ====== Burger / Drawer ======
+      const burger   = document.getElementById("menuToggle") || document.querySelector(".hamburger");
+      const menu     = document.getElementById("mobileMenu");
+      const panel    = menu?.querySelector(".mobile-menu__panel");
+      const backdrop = menu?.querySelector(".mobile-menu__backdrop");
+      const list     = menu?.querySelector(".mobile-menu__list");
 
-      if (burger && menu && list) {
-        // Build drawer links from current header navs
+      // Build drawer links from existing header navs (keeps it DRY)
+      if (menu && list) {
         const left  = Array.from(document.querySelectorAll(".nav-left a"));
         const right = Array.from(document.querySelectorAll(".nav-right a"));
         const all   = [...left, ...right];
@@ -70,86 +71,99 @@ document.addEventListener("DOMContentLoaded", () => {
           const text = (a.textContent || href).trim();
           return `<li><a href="${href}">${text}</a></li>`;
         }).join("");
+      }
 
-        const openMenu = () => {
-          // Show + animate in
-          menu.hidden = false;
-          requestAnimationFrame(() => {
-            menu.classList.add("open");
-            burger.setAttribute("aria-expanded", "true");
-            document.body.classList.add("menu-open");
-          });
-        };
-        const closeMenu = () => {
-          menu.classList.remove("open");
-          burger.setAttribute("aria-expanded", "false");
-          document.body.classList.remove("menu-open");
-          setTimeout(() => { menu.hidden = true; }, 280);
-        };
+      const body = document.body;
 
-        burger.addEventListener("click", () => {
-          const expanded = burger.getAttribute("aria-expanded") === "true";
-          expanded ? closeMenu() : openMenu();
+      const openMenu = () => {
+        if (!menu || !burger) return;
+        menu.hidden = false;
+        requestAnimationFrame(() => {
+          menu.classList.add("open");
+          burger.setAttribute("aria-expanded", "true");
+          body.classList.add("menu-open");
         });
-        close?.addEventListener("click", closeMenu);
-        menu.addEventListener("click", (e) => {
-          if (e.target === menu || e.target.hasAttribute("data-close")) closeMenu();
-        });
-        window.addEventListener("keydown", (e) => {
-          if (e.key === "Escape" && !menu.hidden) closeMenu();
-        });
+      };
+
+      const closeMenu = () => {
+        if (!menu || !burger) return;
+        menu.classList.remove("open");
+        burger.setAttribute("aria-expanded", "false");
+        body.classList.remove("menu-open");
+        setTimeout(() => { menu.hidden = true; }, 280);
+      };
+
+      const isOpen = () => burger?.getAttribute("aria-expanded") === "true";
+
+      // Toggle on burger
+      burger?.addEventListener("click", () => {
+        isOpen() ? closeMenu() : openMenu();
+      });
+
+      // Close on backdrop
+      backdrop?.addEventListener("click", closeMenu);
+
+      // Close on link click
+      if (list) {
         list.addEventListener("click", (e) => {
           const a = e.target.closest("a");
           if (a) closeMenu();
         });
-
-        // ====== HARD BREAKPOINT ENFORCER (inline !important) ======
-        const navLeft  = document.querySelector(".nav-left");
-        const navRight = document.querySelector(".nav-right");
-
-        const forceShow = (el, disp = "flex") => el?.style.setProperty("display", disp, "important");
-        const forceHide = (el) => el?.style.setProperty("display", "none", "important");
-
-        const applyHeaderBreakpoint = () => {
-          const isMobile = window.matchMedia("(max-width: 900px)").matches;
-
-          if (isMobile) {
-            // Mobile: burger visible, wide navs hidden
-            forceShow(burger, "inline-flex");
-            forceHide(navLeft);
-            forceHide(navRight);
-          } else {
-            // Desktop: burger hidden, wide navs visible, drawer closed
-            forceHide(burger);
-            forceShow(navLeft, "flex");
-            forceShow(navRight, "flex");
-            // Close drawer if it was open
-            burger.setAttribute("aria-expanded", "false");
-            document.body.classList.remove("menu-open");
-            menu.classList.remove("open");
-            menu.hidden = true;
-          }
-        };
-
-        // Run now and keep synced
-        applyHeaderBreakpoint();
-        window.addEventListener("resize", applyHeaderBreakpoint);
-        window.addEventListener("orientationchange", applyHeaderBreakpoint);
-
-        // Fallback: also re-apply after fonts/layout settle
-        setTimeout(applyHeaderBreakpoint, 0);
-        setTimeout(applyHeaderBreakpoint, 150);
-        setTimeout(applyHeaderBreakpoint, 600);
       }
+
+      // ✅ Close on *outside* click (anywhere not inside panel or burger)
+      document.addEventListener("click", (e) => {
+        if (!isOpen()) return;
+        const t = e.target;
+        const clickedInsidePanel = panel?.contains(t);
+        const clickedBurger = burger?.contains(t);
+        if (!clickedInsidePanel && !clickedBurger) closeMenu();
+      });
+
+      // ESC closes
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && isOpen()) closeMenu();
+      });
+
+      // ====== HARD BREAKPOINT ENFORCER (inline !important) ======
+      const navLeft  = document.querySelector(".nav-left");
+      const navRight = document.querySelector(".nav-right");
+
+      const forceShow = (el, disp = "flex") => el?.style.setProperty("display", disp, "important");
+      const forceHide = (el) => el?.style.setProperty("display", "none", "important");
+
+      const applyHeaderBreakpoint = () => {
+        const mobile = window.matchMedia("(max-width: 900px)").matches;
+        if (mobile) {
+          // Mobile: burger visible, wide navs hidden
+          burger?.style.setProperty("display", "grid", "important"); // matches CSS grid centering
+          forceHide(navLeft);
+          forceHide(navRight);
+        } else {
+          // Desktop: burger hidden, wide navs visible (and ensure drawer closed)
+          burger?.style.setProperty("display", "none", "important");
+          forceShow(navLeft, "flex");
+          forceShow(navRight, "flex");
+          if (isOpen()) closeMenu();
+          if (menu) { menu.classList.remove("open"); menu.hidden = true; }
+        }
+      };
+
+      applyHeaderBreakpoint();
+      window.addEventListener("resize", applyHeaderBreakpoint);
+      window.addEventListener("orientationchange", applyHeaderBreakpoint);
+      setTimeout(applyHeaderBreakpoint, 0);
+      setTimeout(applyHeaderBreakpoint, 150);
+      setTimeout(applyHeaderBreakpoint, 600);
     })
     .catch(() => {});
 
   const footerPromise = fetch(`${base}partials/footer.html`)
     .then(r => r.text())
     .then(html => {
-      const footerMount = document.getElementById("footer");
-      if (!footerMount) return;
-      footerMount.innerHTML = html;
+      const mount = document.getElementById("footer");
+      if (!mount) return;
+      mount.innerHTML = html;
     })
     .catch(() => {});
 
@@ -333,42 +347,4 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }, 50);
   })();
-});
-
-
-// Mobile drawer controls
-const menuBtn = document.getElementById('menuToggle');
-const drawer  = document.getElementById('mobileMenu');
-const backdrop = drawer ? drawer.querySelector('.mobile-menu__backdrop') : null;
-const links = drawer ? drawer.querySelectorAll('.mobile-menu__list a') : [];
-
-function openMenu(){
-  if(!drawer) return;
-  drawer.hidden = false;
-  requestAnimationFrame(() => drawer.classList.add('open'));
-  menuBtn?.setAttribute('aria-expanded','true');
-  document.body.classList.add('menu-open');
-}
-
-function closeMenu(){
-  if(!drawer) return;
-  drawer.classList.remove('open');
-  menuBtn?.setAttribute('aria-expanded','false');
-  document.body.classList.remove('menu-open');
-  setTimeout(() => { drawer.hidden = true; }, 280);
-}
-
-menuBtn?.addEventListener('click', () => {
-  const open = menuBtn.getAttribute('aria-expanded') === 'true';
-  open ? closeMenu() : openMenu();
-});
-
-backdrop?.addEventListener('click', closeMenu);
-
-// close the drawer when a nav link is tapped
-links.forEach(a => a.addEventListener('click', closeMenu));
-
-// ESC closes
-document.addEventListener('keydown', (e) => {
-  if(e.key === 'Escape' && drawer && !drawer.hidden) closeMenu();
 });

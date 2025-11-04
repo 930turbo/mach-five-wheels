@@ -177,7 +177,7 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
 .mobile-menu__list a{
   display: inline-flex;
   justify-content: center; align-items: center; text-align: center;
-  padding: .7rem 1rem;
+  padding: .45rem 1rem;
   min-width: min(86%, 520px);  /* nice centered column on wide phones */
   border-radius: 12px;
   border: 1px solid var(--m5-border-soft);
