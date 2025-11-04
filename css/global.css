@@ -84,3 +84,60 @@
   background:rgba(255,255,255,.06);
   color:#fff; text-decoration:none; font-weight:700;
 }
+
+/* Button shell */
+.site-header .hamburger{
+  display:none;                 /* shown <900px in your media queries */
+  width:44px; height:44px;
+  box-sizing:border-box;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  padding:0;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  display:grid; place-items:center;     /* hard center the icon */
+  transition:transform .18s, border-color .25s, background .25s, box-shadow .25s;
+}
+.site-header .hamburger:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.2); }
+
+/* Use the button's own ::before/::after as the lines */
+.site-header .hamburger::before,
+.site-header .hamburger::after{
+  content:"";
+  position:absolute;
+  left:50%; top:50%;
+  width:22px; height:2px;             /* line thickness */
+  background:#fff;                     /* closed state color (dash) */
+  border-radius:2px;
+  transform-origin:center center;
+  /* center exactly on the button center — no offsets */
+  transform: translate(-50%,-50%);
+  transition: transform .22s ease, opacity .18s ease, background .25s ease;
+  will-change: transform;
+}
+
+/* Closed: show a single centered dash using ::after; hide ::before */
+.site-header .hamburger::before{ opacity:0; transform: translate(-50%,-50%) scaleX(0); }
+.site-header .hamburger::after { opacity:1; transform: translate(-50%,-50%); }
+
+/* Open: turn into a centered gold X using both lines */
+.site-header .hamburger[aria-expanded="true"]::before,
+.site-header .hamburger[aria-expanded="true"]::after{
+  background:#d2b15a;  /* gold X */
+  opacity:1;
+}
+.site-header .hamburger[aria-expanded="true"]::before{
+  transform: translate(-50%,-50%) rotate(45deg);
+}
+.site-header .hamburger[aria-expanded="true"]::after{
+  transform: translate(-50%,-50%) rotate(-45deg);
+}
+
+/* Optional subtle glow while open */
+.site-header .hamburger[aria-expanded="true"]{
+  border-color: rgba(210,177,90,0.45);
+  box-shadow:
+    0 0 0 1px rgba(210,177,90,0.25) inset,
+    0 10px 34px rgba(210,177,90,0.18);
+}
