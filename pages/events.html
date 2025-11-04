@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Events | Mach Five Wheels</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/events.css" />
+</head>
+<body>
+
+  <!-- HEADER (inline, not injected) -->
+  <header class="site-header">
+    <div class="nav-container">
+      <nav class="nav-left">
+        <a href="/pages/catalog.html">Catalog</a>
+        <a href="/pages/about.html">About</a>
+      </nav>
+
+      <div class="logo">
+        <a href="/index.html">
+          <img src="/assets/logos/machfivelogo.png" alt="Mach Five Wheels Logo" />
+        </a>
+      </div>
+
+      <nav class="nav-right">
+        <a href="/pages/events.html">Events</a>
+        <a href="/pages/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="event-hero" role="banner" aria-label="Events Hero">
+    <div class="hero-overlay">
+      <h1>Experience Mach Five Firsthand</h1>
+      <p>Track events, shop tours, and exhibitions. Follow where Mach Five goes next.</p>
+    </div>
+  </section>
+
+  <!-- FILTER / SEARCH TOOLBAR (STATIC) -->
+  <section class="events-toolbar" aria-label="Event filters">
+    <div class="toolbar-inner">
+      <div class="filters">
+        <button class="chip is-active" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" data-filter="upcoming" aria-pressed="false">Upcoming</button>
+        <button class="chip" data-filter="past" aria-pressed="false">Past</button>
+      </div>
+      <div class="search">
+        <input id="eventSearch" type="search" placeholder="Search events…" autocomplete="off" aria-label="Search events"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <main class="events-list" id="eventsRoot">
+    <h2>Appearances</h2>
+
+    <!-- Event -->
+    <article class="event-card" data-date="2025-11-04" data-tags="trade-show; debut; porsche">
+      <aside class="event-date">
+        <span class="day">07 - 09</span>
+        <span class="mon">AUG</span>
+        <span class="yr">2026</span>
+      </aside>
+      <div class="event-body">
+        <header class="event-head">
+          <h3>Mount Washington Hillclimb 2026</h3>
+          <div class="badges">
+            <span class="badge">Hillclimb</span>
+            <span class="badge">Racing</span>
+          </div>
+        </header>
+        <p class="meta">
+          <span class="location">Mount Washington</span>
+          <span class="date-range">August 7-9, 2026</span>
+        </p>
+        <p class="desc">
+          Join us at Mount Washington to see Chris Fren's 991 GT3R Evo race to the top fitted with our CRE991 Two-Piece wheels.
+        </p>
+      </div>
+      <figure class="event-image">
+        <img src="../assets/images/mwhc26.png" alt="SEMA Show display" loading="lazy"/>
+      </figure>
+    </article>
+
+  </main>
+
+  <!-- CTA -->
+  <section class="events-cta" aria-label="Call to action">
+    <h2>Want Us At Your Event?</h2>
+    <p>Submit your car or invite our team for a build feature or appearance.</p>
+    <a href="../pages/contact.html" class="btn-primary">Contact Us</a>
+  </section>
+
+  <!-- FOOTER (inline, not injected) -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-left">© Mach Five Wheels</div>
+      <div class="footer-center">
+        <a href="/pages/legal.html">Legal</a>
+        <a href="/pages/privacy.html">Privacy</a>
+        <a href="/pages/contact.html">Contact</a>
+      </div>
+      <div class="footer-right">Engineered without compromise</div>
+    </div>
+  </footer>
+
+  <!-- Minimal filter/search logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const buttons = Array.from(document.querySelectorAll('.chip'));
+      const cards = Array.from(document.querySelectorAll('.event-card'));
+      const searchInput = document.getElementById('eventSearch');
+
+      const today = new Date(); today.setHours(0,0,0,0);
+
+      function isUpcoming(card){ const d = new Date(card.dataset.date); d.setHours(0,0,0,0); return d >= today; }
+      function isPast(card){ const d = new Date(card.dataset.date); d.setHours(0,0,0,0); return d < today; }
+      function matches(card,q){
+        if(!q) return true;
+        q = q.trim().toLowerCase();
+        return card.innerText.toLowerCase().includes(q) || (card.dataset.tags||'').toLowerCase().includes(q);
+      }
+
+      let active = 'all', query = '';
+      function apply(){
+        cards.forEach(c=>{
+          let show = (active==='all') || (active==='upcoming' && isUpcoming(c)) || (active==='past' && isPast(c));
+          if(show) show = matches(c, query);
+          c.style.display = show ? '' : 'none';
+        });
+      }
+
+      buttons.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          buttons.forEach(b=>{ b.classList.remove('is-active'); b.setAttribute('aria-pressed','false'); });
+          btn.classList.add('is-active'); btn.setAttribute('aria-pressed','true');
+          active = btn.dataset.filter || 'all';
+          apply();
+        });
+      });
+
+      if(searchInput){
+        searchInput.addEventListener('input', e=>{ query = e.target.value; apply(); });
+      }
+
+      apply();
+    });
+  </script>
+</body>
+</html>

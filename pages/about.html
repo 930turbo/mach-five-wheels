@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About | Mach Five Wheels</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/about.css" />
+
+    <!-- Shared Header/Footer logic -->
+    <script src="../js/index.js" defer></script>
+    <!-- About page JS -->
+    <script src="../js/about.js" defer></script>
+  </head>
+
+  <body>
+    <!-- Header (injected) -->
+    <div id="header"></div>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <img
+        src="../assets/images/hero4.jpg"
+        alt="Engineering Without Compromise"
+        class="hero-image"
+      />
+      <div class="hero-overlay hero-vignette"></div>
+
+      <div class="hero-content container">
+        <!-- 👇 add this wrapper -->
+        <div class="hero-glass">
+          <h1 class="hero-title">Engineering Without Compromise</h1>
+          <p class="hero-sub">
+            Track‑bred. Street‑hardened. Every Mach Five wheel begins where
+            performance matters most.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BRAND STORY (split) ===== -->
+    <section class="split container">
+      <div class="split-media card-3d">
+        <div class="video-frame">
+          <video
+            src="../assets/images/hm.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+        </div>
+      </div>
+
+      <div class="split-copy">
+        <h2 class="overline">Our Story</h2>
+        <h3 class="display">“Disruptive by Design.”</h3>
+        <p class="lead">
+          Every wheel begins with purpose. Forged from aerospace-grade alloys,
+          machined with extreme accuracy, and hand-finished for a lifetime of
+          use.
+        </p>
+        <p class="muted">
+          Built for the track. Unrivaled on the street. These are instruments of
+          intent, not decoration.
+        </p>
+        <ul class="checks">
+          <li>Proprietary forging process</li>
+          <li>FEA-guided architecture & full physical destructive testing</li>
+          <li>TÜV testing available on request</li>
+        </ul>
+
+        <div class="inline-cta">
+          <a href="/pages/about.html#process" class="link-gold"
+            >Explore the Process</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PILLARS (3) ===== -->
+    <section class="pillars">
+      <div class="container">
+        <h2 class="section-title">Built to Go Mach Five</h2>
+
+        <div class="grid">
+          <article class="pillar card-3d">
+            <div class="cap"></div>
+            <h3>True Aerospace Alloys</h3>
+            <p>
+              At our core, Mach Five is a material engineering company. This
+              means hand picked, highly-engineered specialized forgings of
+              aluminum and magnesium. Strength is the foundation, not the finish
+              line.
+            </p>
+          </article>
+
+          <article class="pillar card-3d">
+            <div class="cap"></div>
+            <h3>Human Touch</h3>
+            <p>
+              From first concept to final inspection, engineers and machinists
+              oversee every step. Their expertise ensures each wheel meets
+              exacting standards before it leaves the facility. Through company
+              history in government projects, we hold ourselves to extreme
+              standards.
+            </p>
+          </article>
+
+          <article class="pillar card-3d">
+            <div class="cap"></div>
+            <h3>FEA & Testing</h3>
+            <p>
+              Finite Element Analysis + real‑world validation under extreme load
+              and heat cycles. Physical destructive testing for every new
+              design. Information available upon request. Data informed
+              decisions, so you can feel confident in working with us.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROCESS (gallery) ===== -->
+    <section class="process" id="process">
+      <div class="container">
+        <div class="process-head">
+          <h2 class="section-title">Inside our Process</h2>
+          <p class="sub">
+            From first sketch to last validation, Mach Five Wheels are
+            engineered, not styled.
+          </p>
+        </div>
+
+        <div class="tiles">
+          <article class="tile card-3d">
+            <span class="badge">01</span>
+            <div
+              class="tile-media"
+              style="background-image: url('../assets/images/designstudio.png')"
+            ></div>
+            <div class="tile-copy">
+              <h3>Initial Concept</h3>
+              <p>Function defines geometry. Aesthetics follow performance.</p>
+            </div>
+          </article>
+
+          <article class="tile card-3d">
+            <span class="badge">02</span>
+            <div
+              class="tile-media"
+              style="background-image: url('../assets/images/cnc.jpg')"
+            ></div>
+            <div class="tile-copy">
+              <h3>5-Axis CNC</h3>
+              <p>Rigidity, mass, and heat flow optimized.</p>
+              <a href="cncinfo.html" class="btn-link-gold">Learn More</a>
+            </div>
+          </article>
+
+          <article class="tile card-3d tile-wide">
+            <span class="badge">03</span>
+            <div
+              class="tile-media"
+              style="
+                background-image: url('../assets/images/wheel-mounted.png');
+              "
+            ></div>
+            <div class="tile-copy">
+              <h3>Mounted Validation</h3>
+              <p>
+                Fitment, balance, load, harmonics. Proven at speed on road &
+                track.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TESTIMONIAL / COLLAb ===== -->
+    <section class="collab">
+      <div class="container narrow">
+        <h2 class="section-title">Built With You, Not For You</h2>
+        <p class="lead center">
+          Our catalog evolves through real builds, professional racing, and
+          uncompromising feedback. When you spec your setup, you influence its
+          next evolution. Every new design request has the potential to become a
+          permanent addition, creating a catalog shaped by true enthusiasts.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== CTA STRIP ===== -->
+    <section class="cta-strip">
+      <div class="container cta-surface card-3d">
+        <div class="cta-copy">
+          <h3>Ready to Build Your Dream Set?</h3>
+          <p>
+            Contact us directly, or work with a Mach Five dealer to dial in
+            fitment, finish, and delivery.
+          </p>
+        </div>
+        <div class="cta-actions">
+          <a href="/pages/catalog.html" class="btn btn-white">View Catalog</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LUXE ZIP MODAL ===== -->
+    <div id="zipModal" class="modal" aria-hidden="true">
+      <div class="modal__backdrop" data-close></div>
+
+      <div
+        class="modal__dialog card-3d"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="zipTitle"
+        aria-describedby="zipDesc"
+      >
+        <button class="modal__close" aria-label="Close" data-close>
+          &times;
+        </button>
+        <div class="modal__head">
+          <h3 id="zipTitle">Find a Dealer</h3>
+          <p id="zipDesc" class="muted">
+            Enter your ZIP code to locate an authorized Mach Five partner near
+            you.
+          </p>
+        </div>
+
+        <form class="zip-form" action="/pages/dealer-locator.html" method="GET">
+          <label class="visually-hidden" for="zip">ZIP Code</label>
+          <input
+            id="zip"
+            name="zip"
+            inputmode="numeric"
+            maxlength="10"
+            placeholder="ZIP Code"
+            required
+          />
+          <button type="submit" class="btn btn-gold btn-block">Search</button>
+          <p class="form-hint">
+            International?
+            <a class="link-gold" href="/pages/dealer-locator.html"
+              >See all dealers</a
+            >
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer (injected) -->
+    <div id="footer"></div>
+  </body>
+</html>

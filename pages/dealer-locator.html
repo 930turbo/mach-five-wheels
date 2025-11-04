@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Find a Dealer | Mach Five Wheels</title>
+
+  <!-- Fonts + Styles -->
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="../partials/shared.css"/>
+  <link rel="stylesheet" href="../css/dealer.css"/>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script src="../js/index.js" defer></script>
+  <script src="../js/dealer.js" defer></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <!-- Injected Header -->
+    <header id="header"></header>
+
+    <!-- HERO -->
+    <section class="dealer-hero" aria-label="Find a Dealer">
+      <div class="dealer-hero__media" role="img" aria-label="Mach Five Wheels global dealer network"></div>
+      <div class="dealer-hero__content container">
+        <h1><span class="gold">Find a Dealer</span></h1>
+        <p>Premium fitment, local support. Search by ZIP to find an authorized Mach Five dealer near you.</p>
+        <form id="zipForm" class="zip-form" novalidate>
+          <label for="zipInput" class="visually-hidden">ZIP Code</label>
+          <input type="text" id="zipInput" inputmode="numeric" autocomplete="postal-code" placeholder="Enter your ZIP code" maxlength="5" required />
+          <button type="submit" class="btn btn-outline">Search</button>
+          <span class="zip-help">Search radius: 100 miles</span>
+        </form>
+      </div>
+    </section>
+
+    <!-- RESULTS + MAP -->
+    <section class="dealer-grid container" aria-label="Dealers & Map">
+      <aside class="dealer-results-panel">
+        <div class="panel-head">
+          <h2>Nearby Dealers</h2>
+          <button id="dealerFormBtn" class="btn btn-outline btn-sm">Become a Dealer</button>
+        </div>
+        <div id="dealerResults" class="results-wrap" aria-live="polite" aria-busy="false">
+          <div class="placeholder">
+            <p>Enter your ZIP above to see dealers within <strong>100 miles</strong>.</p>
+          </div>
+        </div>
+      </aside>
+
+      <div class="dealer-map-panel">
+        <div class="map-head">
+          <h2>Dealer Map</h2>
+        </div>
+        <div id="dealerMap" class="map"></div>
+      </div>
+    </section>
+
+    <!-- CTA STRIP -->
+    <section class="dealer-cta-strip" aria-label="Partner with Mach Five">
+      <div class="container cta-inner">
+        <h3>Want to join the network?</h3>
+        <p>Performance-first products, white-glove support, and priority allocations.</p>
+        <button id="dealerFormBtnStrip" class="btn btn-primary">Apply to Become a Dealer</button>
+      </div>
+    </section>
+
+    <!-- Dealer Application Modal -->
+    <div id="dealerFormOverlay" class="popup hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Dealer Application">
+      <div class="popup-content" role="document">
+        <button id="closeForm" class="close-btn" aria-label="Close dealer application">&times;</button>
+        <h2>Dealer Application</h2>
+        <form id="dealerForm" action="/api/mail" method="POST" class="dealer-form" novalidate>
+          <!-- Honeypot -->
+          <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"/>
+          <div class="grid">
+            <div class="field">
+              <label for="business">Business Name *</label>
+              <input id="business" name="business" type="text" required />
+            </div>
+            <div class="field">
+              <label for="contact">Contact Name *</label>
+              <input id="contact" name="contact" type="text" required />
+            </div>
+            <div class="field">
+              <label for="email">Email Address *</label>
+              <input id="email" name="email" type="email" required />
+            </div>
+            <div class="field">
+              <label for="phone">Phone *</label>
+              <input id="phone" name="phone" type="tel" />
+            </div>
+            <div class="field full">
+              <label for="message">Tell us about your shop *</label>
+              <textarea id="message" name="message" required placeholder="Location, focus (street/track), services (mount/balance, align, etc.)"></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+          <p class="legal">By submitting, you agree to be contacted regarding your application.</p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div id="submissionPopup" class="popup hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Submission Confirmation">
+      <div class="popup-content">
+        <p>✅ Thank you — we’ll review your dealer application shortly.</p>
+        <button id="closePopup" class="btn btn-primary">Close</button>
+      </div>
+    </div>
+
+    <!-- Injected Footer -->
+    <footer id="footer"></footer>
+  </div>
+
+  <!-- URL param handler (success state) -->
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const url = new URL(window.location.href);
+      if (url.searchParams.get("submitted") === "true") {
+        document.getElementById("submissionPopup").classList.remove("hidden");
+        history.replaceState(null, "", window.location.pathname);
+      }
+    });
+  </script>
+</body>
+</html>

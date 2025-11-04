@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FAQ | Mach Five Wheels</title>
+  <link rel="stylesheet" href="../partials/shared.css" />
+  <link rel="stylesheet" href="../css/faq.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="../js/index.js" defer></script>
+
+</head>
+<body>
+  <!-- 🔰 Header -->
+  <div id="header"></div>
+
+  <main class="faq-wrapper">
+    <h1>Frequently Asked Questions</h1>
+
+    <div class="faq-container">
+      <div class="faq-item">
+        <button class="faq-question">What vehicles are your wheels compatible with?</button>
+        <div class="faq-answer">
+          <p>Each wheel is custom-engineered for your exact vehicle specs to ensure perfect fitment and optimal performance.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">Do you offer international shipping?</button>
+        <div class="faq-answer">
+          <p>Yes, we ship globally. Shipping rates and import taxes may vary depending on your location.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">How long does it take to receive my wheels?</button>
+        <div class="faq-answer">
+          <p>Production typically takes 6–8 weeks after spec approval and engineering time for new designs. Shipping time depends on destination. For customers near our facility in Worcester Massachusetts, local pickup or delivery is available.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">Do your wheels meet motorsport standards?</button>
+        <div class="faq-answer">
+          <p>Yes, our wheels are FEA, and destructively tested to match motorsports standards. TUV standards can be 1:1 tested upon request.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">Can I choose my finish and color?</button>
+        <div class="faq-answer">
+          <p>Absolutely. We offer a wide range of powder coat and anodized finishes, including almost infinite custom options. If you can dream it, we can make it happen.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">Do you provide center caps and hardware?</button>
+        <div class="faq-answer">
+          <p>Each set includes matching center caps. Optional hardware colors are available and is offered in multiple materials.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+  <button class="faq-question">What is the difference between monoblock and monoblock beadlock wheels?</button>
+  <div class="faq-answer">
+    <p>Monoblock wheels are forged from a single piece of aluminum or magnesium and are the exact look you request. Monoblock beadlock wheels consist of the wheel itself, and a locking beadlock plate allowing for more customization and modular construction. This option is especially good for off-road applications.</p>
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question">Can you match OEM wheel specs?</button>
+  <div class="faq-answer">
+    <p>Yes. We can replicate OEM fitment or provide aggressive aftermarket specs depending on your desired aesthetic and performance goals.</p>
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question">Are your wheels forged or cast?</button>
+  <div class="faq-answer">
+    <p>All our wheels are precision CNC-machined from aerospace-grade forged aluminum and magnesium, offering superior strength-to-weight ratio compared to cast alternatives. At our core, we are a material engineering company and hold ourselves to high standards with forging selection and final inspection.</p>
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question">Can I order wheels for a widebody kit?</button>
+  <div class="faq-answer">
+    <p>Absolutely. Just provide fender measurements and target fitment. We’ll spec wheels to maximize stance, lip depth, and clearance. In many cases, switching to a multi-piece construction is advised.</p>
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question">Can I see a rendering of my wheels before production?</button>
+  <div class="faq-answer">
+    <p>Yes. After spec confirmation, we can provide renders of your chosen wheel style. For new designs, renders along with revisions are provided.</p>
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question">What warranty do you offer?</button>
+  <div class="faq-answer">
+    <p>All wheels come with a limited lifetime structural warranty and 1-year finish warranty against manufacturer defects. These instances are judged case-by-case, but we strive to be transparent and fair with everything.</p>
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question">Can I track my order status?</button>
+  <div class="faq-answer">
+    <p>Yes. You’ll receive email updates at each stage—design, machining, finishing, QC, and shipment.</p>
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question">How do I become a dealer?</button>
+  <div class="faq-answer">
+    <p>Use the contact form to apply. Approved dealers receive access to exclusive pricing, support, and marketing assets.</p>
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question">Can I get custom engraving or branding on my wheels?</button>
+  <div class="faq-answer">
+    <p>Yes. Logos, initials, serials, or custom text can be laser-etched or machined on the face or barrel. Reach out for engraving placement options.</p>
+  </div>
+</div>
+
+    </div>
+
+  </main>
+
+  <!-- 🔻 Footer -->
+  <div id="footer"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const questions = document.querySelectorAll(".faq-question");
+
+      questions.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Close all answers
+          questions.forEach(q => {
+            if (q !== btn) {
+              q.classList.remove("active");
+              q.nextElementSibling.style.maxHeight = null;
+            }
+          });
+
+          // Toggle clicked answer
+          btn.classList.toggle("active");
+          const answer = btn.nextElementSibling;
+          answer.style.maxHeight = btn.classList.contains("active") ? answer.scrollHeight + "px" : null;
+        });
+      });
+    });
+  </script>
+</body>
+</html>

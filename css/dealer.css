@@ -1,0 +1,417 @@
+/* =========================================================
+   Mach Five Wheels — Dealer Locator (REWRITE)
+   Objectives hit:
+   • LEFT PANEL THINNER (fixed clamp) • MAP MUCH WIDER (flex)
+   • Keep map height unchanged • No horizontal scroll
+   • Premium dark theme • Clean spacing • Popup fixes
+========================================================= */
+
+/* ---------- Design tokens ---------- */
+:root{
+  --bg:#000; --panel:#0b0b0b; --panel-2:#111; --line:#222;
+  --fg:#fff; --muted:#bfbfbf; --muted-2:#8e8e8e; --gold:#897106;
+  --radius:14px; --radius-sm:10px;
+  --shadow:0 18px 60px rgba(0,0,0,.45);
+  --glass:rgba(255,255,255,0.04);
+
+  /* Dealer grid sizing */
+  --dealers-min: 300px;   /* thinner floor */
+  --dealers-vw:  22vw;    /* target mid range */
+  --dealers-max: 420px;   /* never gets bulky */
+  --grid-max:    2000px;  /* section cap so map can breathe */
+}
+
+/* ---------- Reset / base ---------- */
+*{ box-sizing:border-box; margin:0; padding:0 }
+html,body{
+  min-height:100%;
+  background:var(--bg);
+  color:var(--fg);
+  font-family:'Rajdhani',sans-serif;
+  line-height:1.35;
+  scroll-behavior:smooth;
+  overflow-x:hidden;                /* kill accidental horizontal scroll */
+}
+img{ max-width:100%; display:block }
+a{ color:inherit; text-decoration:none }
+button,input,textarea,select{ font:inherit; color:inherit }
+.container{ max-width:1200px; margin:0 auto; padding:0 2rem }
+.visually-hidden{ position:absolute!important; clip:rect(1px,1px,1px,1px); padding:0; border:0; height:1px; width:1px; overflow:hidden }
+
+/* ---------- Utilities ---------- */
+.gold{ color:var(--gold); font-weight:700; letter-spacing:.5px }
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  border-radius:12px; padding:.9rem 1.35rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.6px; cursor:pointer;
+  transition:transform .08s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+  border:0; background:#fff; color:#000;
+}
+.btn:active{ transform:translateY(1px) }
+.btn-primary{ background:#fff; color:#000; box-shadow:0 10px 30px rgba(255,255,255,.06) }
+.btn-primary:hover{ background:#eaeaea }
+.btn-outline{ background:transparent; color:var(--gold); border:2px solid var(--gold) }
+.btn-outline:hover{ background:var(--gold); color:#000 }
+.btn-sm{ padding:.55rem .9rem; border-radius:10px; font-size:.95rem }
+
+/* ---------- Page wrapper / header ---------- */
+.page-wrapper{ display:flex; flex-direction:column; min-height:100vh }
+.site-header{
+  width:100%; background:#000; color:#fff; position:sticky; top:0; z-index:1000;
+  padding:1.25rem 2rem; border-bottom:1px solid rgba(255,255,255,.1);
+}
+.nav-container{ display:flex; align-items:center; justify-content:space-between; width:100% }
+.logo{ flex:0 0 auto; display:flex; flex-direction:column; align-items:center; text-align:center }
+.logo img{ height:42px; display:block }
+.nav-left,.nav-right{ display:flex; gap:2rem; flex:1 }
+.nav-left{ justify-content:flex-start; padding-left:2rem }
+.nav-right{ justify-content:flex-end; padding-right:2rem }
+.nav-left a,.nav-right a{ font-weight:600; letter-spacing:.5px; transition:color .2s ease }
+.nav-left a:hover,.nav-right a:hover{ color:var(--gold) }
+
+/* =========================================================
+   HERO
+========================================================= */
+.dealer-hero{ position:relative; isolation:isolate }
+.dealer-hero__media{
+  height:52vh; min-height:460px; max-height:680px;
+  background:
+    radial-gradient(1200px 420px at 50% 50%, rgba(137,113,6,.18), transparent 55%),
+    url('/assets/images/dealer-hero.jpg') center/cover no-repeat, #000;
+  filter:saturate(.9) contrast(.95) brightness(.9);
+}
+.dealer-hero__content{
+  position:absolute; inset:0; display:grid; place-items:center; text-align:center; padding:2rem
+}
+.dealer-hero__content h1{ font-size:3rem; line-height:1.05; margin-bottom:.35rem; text-transform:uppercase }
+.dealer-hero__content p{ color:var(--muted); max-width:760px; margin:0 auto 1.25rem; font-size:1.15rem }
+
+/* ZIP form */
+.zip-form{ display:flex; gap:.75rem; flex-wrap:wrap; justify-content:center; align-items:center }
+#zipInput{
+  background:#0d0d0d; border:1px solid #2a2a2a; color:#fff; border-radius:12px;
+  padding:.95rem 1.15rem; min-width:220px; max-width:240px; font-size:1.05rem;
+  transition:border-color .2s ease, box-shadow .2s ease
+}
+#zipInput:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(137,113,6,.18) }
+.zip-help{ color:#8e8e8e; font-size:.95rem }
+
+/* Scroll indicator */
+.scroll-indicator{
+  position:absolute; left:50%; transform:translateX(-50%);
+  bottom:14px; color:var(--gold); font-weight:700; letter-spacing:.4px; opacity:.8;
+  animation:bounce 2.5s infinite ease-in-out; user-select:none; pointer-events:none
+}
+@keyframes bounce{ 0%,100%{ transform:translate(-50%,0); opacity:.8 } 50%{ transform:translate(-50%,6px); opacity:1 } }
+
+/* =========================================================
+   RESULTS + MAP GRID  (← THIS is the important change)
+   Thin, fixed-width results panel + flexible, wide map
+========================================================= */
+
+/* Widen ONLY this section so map gets room */
+.dealer-grid {
+  display: grid;
+  grid-template-columns: clamp(var(--dealers-min), var(--dealers-vw), var(--dealers-max)) minmax(0,1fr);
+  gap: 2rem;
+  align-items: stretch;
+  max-width: var(--grid-max);
+  margin: 2.2rem auto 3rem; /* top auto bottom */
+  padding: 0 2rem; /* site gutters */
+}
+
+/* Panels */
+.dealer-results-panel,.dealer-map-panel{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  min-width:400px;
+}
+
+/* Heads */
+.panel-head,.map-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1rem 1.2rem; border-bottom:1px solid var(--line)
+}
+.panel-head h2,.map-head h2{ font-size:1.1rem; text-transform:uppercase; letter-spacing:1px }
+
+/* Results list */
+.results-wrap{
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+
+  display: grid;
+  gap: 1rem;
+  grid-auto-rows: max-content;  /* don’t stretch rows */
+  align-content: start;         /* don’t fill container */
+  align-items: start;           /* don’t stretch items */
+
+  padding: 1rem 1.2rem 1.2rem;
+}
+.placeholder{ opacity:.75 }
+.placeholder p{ color:var(--muted); font-size:1rem }
+
+/* Dealer card */
+.dealer-card{
+  background:var(--panel);
+  border:1px solid #1c1c1c;
+  border-radius:12px;
+  padding:1rem 1rem 1.1rem;
+  display:grid; gap:.35rem;
+  transition:transform .15s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.dealer-card:hover{
+  transform:translateY(-2px);
+  border-color:var(--gold);
+  box-shadow:0 12px 30px rgba(137,113,6,.08);
+}
+.dealer-card h3{ font-size:1.15rem; margin:0 0 .1rem }
+.dealer-card p{ color:#cfcfcf }
+.dealer-card .distance{ color:var(--gold); font-weight:700; margin-top:.25rem }
+.dealer-card a[href^="tel:"]{ text-decoration:underline }
+.dealer-card .actions{ margin-top:.35rem }
+
+/* Map panel + Leaflet */
+.dealer-map-panel{ display:flex; flex-direction:column }
+.map-head{ padding:1rem 1.2rem }
+
+/* IMPORTANT: Map height unchanged; width expands via grid */
+#dealerMap,.map{
+  width:100%;
+  height:600px;                   /* keep this stable */
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  border-radius:0 0 var(--radius) var(--radius);
+}
+.leaflet-container{ background:#000 }
+.leaflet-tile{ filter:brightness(1.12) contrast(.85) grayscale(1) }
+.leaflet-popup-content-wrapper{
+  background:#0f0f0f; color:#fff; border-radius:10px; border:1px solid #2a2a2a
+}
+.leaflet-popup-tip{ background:#0f0f0f }
+
+/* Mobile: stack cleanly */
+@media (max-width:1100px){
+  .dealer-grid{
+    grid-template-columns:1fr;
+    max-width:100%;
+  }
+  #dealerMap,.map{ height:520px } /* optional shorter on small screens */
+}
+
+/* Guaranteed space below the map/grid before the footer */
+.dealer-grid::after{
+  content:"";
+  display:block;
+  height: .15rem;   /* adjust to taste */
+}
+
+/* =========================================================
+   CTA STRIP
+========================================================= */
+.dealer-cta-strip{ margin:2.5rem 0 3rem }
+.cta-inner{
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--radius);
+  text-align:center;
+  padding:2rem;
+}
+.cta-inner h3{ text-transform:uppercase; letter-spacing:1px; font-size:1.6rem; margin-bottom:.25rem }
+.cta-inner p{ color:var(--muted); margin:0 auto 1rem; max-width:720px }
+
+/* =========================================================
+   POPUPS (Dealer Application + Success)
+   Font inherit • spacing consistent • keyboard friendly
+========================================================= */
+.popup{
+  position:fixed; inset:0; z-index:10000;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.78);
+  font:inherit; color:inherit;
+}
+.popup.hidden{ display:none }
+
+.popup-content{
+  position:relative;
+  width:min(560px,92vw);
+  background:#0f0f0f; color:#f5f5f5;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:2rem;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+}
+.popup-content p{ font-size:1.15rem; font-weight:600; letter-spacing:.4px; margin-bottom:1.2rem }
+
+.close-btn{
+  position:absolute; top:1rem; right:1rem;
+  background:transparent; border:0; color:#aaa; font-size:1.5rem; line-height:1;
+  cursor:pointer; padding:.25rem; border-radius:8px;
+  transition:color .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.close-btn:hover{ color:#fff; background:rgba(255,255,255,.06) }
+.close-btn:focus{ outline:2px solid rgba(137,113,6,.55); outline-offset:2px }
+
+/* Dealer application form */
+.dealer-form{ margin-top:.5rem }
+.dealer-form .grid{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:.5rem }
+.dealer-form .grid .full{ grid-column:1 / -1 }
+@media (max-width:760px){ .dealer-form .grid{ grid-template-columns:1fr } }
+
+.field{ display:grid; gap:.4rem }
+.field label{ color:#bbb; font-size:.95rem }
+
+.dealer-form input,.dealer-form textarea{
+  width:100%;
+  background:#0b0b0b; border:1px solid #2a2a2a; color:#fff;
+  border-radius:10px; padding:.85rem 1rem; resize:vertical;
+}
+.dealer-form textarea{ min-height:140px; line-height:1.45 }
+.dealer-form input:focus,.dealer-form textarea:focus{
+  outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(137,113,6,.18)
+}
+.dealer-form .legal{ color:#8e8e8e; font-size:.9rem; margin-top:.6rem }
+
+/* Honeypot */
+.hp{ position:absolute !important; left:-9999px !important }
+
+/* Submit spacing */
+.dealer-form button[type="submit"]{ margin-top:.25rem }
+
+/* =========================================================
+   FOOTER
+========================================================= */
+.site-footer{width:100%;padding:1.5rem 2rem;background:#111;color:#aaa;display:flex;justify-content:center;align-items:center}
+.footer-container{max-width:1200px;width:100%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;font-size:.85rem}
+.footer-left{flex:1;color:#777}
+.footer-center{flex:1;display:flex;justify-content:center;gap:1.5rem}
+.footer-center a{color:#fff;text-decoration:none;border-bottom:1px solid transparent;transition:border .3s ease, opacity .3s ease;font-weight:600}
+.footer-center a:hover{border-bottom:1px solid #fff;opacity:.7}
+.footer-right{flex:1;text-align:right;color:#999;font-style:italic}
+
+/* Add more space above submit button */
+.dealer-form button[type="submit"] {
+  margin-top: 1rem; /* was .25rem, now bigger gap */
+  background: #fff; /* keep original base color */
+  color: #000;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* Gold hover */
+.dealer-form button[type="submit"]:hover {
+  background: var(--gold);
+  color: #000; /* ensures readable text */
+}
+
+/* Extra gap above submit */
+.dealer-form button[type="submit"]{
+  margin-top: 1rem;          /* breathing room below textarea */
+  background:#fff; color:#000;
+  transition: background .25s ease, color .25s ease, opacity .2s ease;
+}
+
+/* Gold hover when enabled */
+.dealer-form button[type="submit"]:hover:not(:disabled){
+  background: var(--gold);
+  color:#000;
+}
+
+/* Disabled state */
+.dealer-form button[type="submit"]:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+  pointer-events:none;
+}
+
+/* Red outline for missing fields */
+.field-error {
+  border-color: #ff4d4d !important;
+  box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.4);
+}
+
+/* Remove redundant CTA */
+.dealer-cta-strip {
+  display: none !important;
+}
+
+/* Add bottom space after dealer grid to replace removed CTA */
+.dealer-grid {
+  margin-bottom: 3rem; /* adjust value to match your old spacing */
+}
+
+@media (max-width: 768px) {
+  .dealer-grid {
+    margin-bottom: 2rem; /* slightly less on small screens */
+  }
+}
+
+/* Remove default highlight on focus */
+.dealer-card:focus {
+  outline: none;
+  border-color: #1c1c1c; /* same as default */
+  box-shadow: none;
+}
+
+/* Keep hover highlight */
+.dealer-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 12px 30px rgba(137,113,6,.08);
+}
+
+/* Visit Website hover gold */
+.dealer-card .btn-primary:hover {
+  background: var(--gold);
+  color: #000; /* keep text readable */
+}
+
+.dealer-form {
+  text-align: center; /* centers inline-block children like the button */
+}
+
+button.btn.btn-primary[type="submit"] {
+  display: inline-block;
+  margin-top: 2rem;     /* space above from message box */
+  margin-bottom: 1.5rem;    /* space below to the text */
+  background: #c0c0c0ff;
+  color: #000;
+}
+
+button.btn.btn-primary[type="submit"]:hover:not(:disabled) {
+  background: var(--gold);
+  color: #000;
+}
+
+/* If you have the text as a paragraph under the button */
+.dealer-form .legal {
+  text-align: center; /* centers the disclaimer/legal text */
+  margin-top: 0.5rem;  /* space between button and text */
+  padding-bottom: 0.1rem;
+}
+
+#dealerFormOverlay .popup-content h2 {
+  margin-bottom: 3rem; /* adjust as needed */
+}
+
+.dealer-hero {
+  margin-bottom: 2rem; /* increase this until it feels right */
+}
+
+/* Gold links inside map popups */
+.leaflet-popup-content a {
+  color: var(--gold);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.leaflet-popup-content a:hover {
+  text-decoration: underline;
+}
+
+.site-header .logo a img {
+  transform: scale(1.75);
+  transform-origin: center;
+}

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact | Mach Five Wheels</title>
+
+    <!-- Fonts + CSS -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/contact.css" />
+
+    <!-- Scripts -->
+    <script src="../js/index.js" defer></script>
+    <script src="../js/header.js" defer></script>
+    <script src="../js/footer.js" defer></script>
+    <script src="../js/contact.js" defer></script>
+  </head>
+
+  <body>
+    <!-- Injected Header -->
+    <header id="header"></header>
+
+    <main class="contact-wrap">
+      <section class="lux-panel">
+        <header class="panel-head">
+          <h1>Contact Us</h1>
+          <p>
+            For wheel set orders, special requests, or general inquiries, please
+            complete the form below.
+          </p>
+        </header>
+
+        <form class="contact-form" action="/api/mail" method="POST" enctype="multipart/form-data" novalidate>
+
+          <!-- Honeypot -->
+          <input
+            type="text"
+            name="company"
+            class="hp"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+          />
+
+          <!-- LEFT COLUMN -->
+          <div class="form-col">
+            <!-- Floating fields -->
+            <div class="field">
+              <input
+                type="text"
+                id="first-name"
+                name="first_name"
+                placeholder=" "
+                required
+                autocomplete="given-name"
+              />
+              <label for="first-name">First Name *</label>
+            </div>
+
+            <div class="field">
+              <input
+                type="text"
+                id="last-name"
+                name="last_name"
+                placeholder=" "
+                required
+                autocomplete="family-name"
+              />
+              <label for="last-name">Last Name *</label>
+            </div>
+
+            <div class="field">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder=" "
+                required
+                autocomplete="email"
+              />
+              <label for="email">Email *</label>
+            </div>
+
+            <div class="field">
+              <input
+                type="email"
+                id="email-confirm"
+                name="email_confirm"
+                placeholder=" "
+                required
+                autocomplete="email"
+              />
+              <label for="email-confirm">Confirm Email *</label>
+              <span
+                class="field-note"
+                id="email-note"
+                role="alert"
+                aria-live="polite"
+              ></span>
+            </div>
+
+            <div class="field">
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder=" "
+                inputmode="tel"
+                autocomplete="tel"
+                required
+              />
+              <label for="phone">Phone *</label>
+            </div>
+
+            <!-- Searchable Country (required via JS) -->
+            <div
+              class="search-select"
+              id="countrySelect"
+              data-name="country"
+              data-placeholder="Country"
+            ></div>
+
+            <!-- Searchable State (required only if US via JS) -->
+            <div
+              class="search-select"
+              id="stateSelect"
+              data-name="state"
+              data-placeholder="State (US)"
+            ></div>
+
+            <!-- City moved to bottom -->
+            <div class="field">
+              <input
+                type="text"
+                id="city"
+                name="city"
+                placeholder=" "
+                autocomplete="address-level2"
+                required
+              />
+              <label for="city">City *</label>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div class="form-col">
+            <!-- Searchable Year (required via JS) -->
+            <div
+              class="search-select"
+              id="yearSelect"
+              data-name="vehicle_year"
+              data-placeholder="Vehicle Year"
+            ></div>
+
+            <!-- Searchable Performance‑Focused Brand (required via JS) -->
+            <div
+              class="search-select"
+              id="brandSelect"
+              data-name="vehicle_make"
+              data-placeholder="Vehicle Make"
+            ></div>
+
+            <div class="field full">
+              <input
+                type="text"
+                id="vehicle-model"
+                name="vehicle_model"
+                placeholder=" "
+                required
+              />
+              <label for="vehicle-model"
+                >Vehicle Model (e.g., 991.1 911 GT3/RS) *</label
+              >
+            </div>
+
+            <!-- 📸 Photo Upload (optional) -->
+            <div class="full upload-block">
+              <label class="upload-label" for="photos"
+                >Attach Photos (optional)</label
+              >
+              <div
+                id="dropzone"
+                class="dropzone"
+                tabindex="0"
+                aria-label="Attach photos by dragging and dropping or using the file picker"
+              >
+                <input
+                  id="photos"
+                  name="photos[]"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  hidden
+                />
+                <div class="dz-instructions">
+                  <strong>Drag & drop</strong> images here, or
+                  <button type="button" class="btn btn-secondary dz-trigger">
+                    Browse
+                  </button>
+                </div>
+                <div id="preview" class="dz-preview" aria-live="polite"></div>
+              </div>
+              <small class="dz-note"
+                >Up to 8 images. JPG/PNG/WEBP preferred.</small
+              >
+            </div>
+
+            <div class="field full">
+              <textarea
+                id="comments"
+                name="comments"
+                rows="6"
+                placeholder=" "
+                required
+              ></textarea>
+              <label for="comments">Message *</label>
+            </div>
+
+            <div class="field full form-submit">
+              <button type="submit" class="btn-primary">Send Message</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- Assurances (two items, centered) -->
+        <ul class="assurances centered">
+          <li>Personalized responses within 1–2 business days</li>
+          <li>Every inquiry reviewed by our engineers</li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- CTA -->
+    <section class="dealer-cta">
+      <div class="dealer-content">
+        <h2>Prefer to Talk to a Dealer?</h2>
+        <p>
+          Use our
+          <a href="/pages/dealer-locator.html" class="gold-text no-underline"
+            >dealer locator</a
+          >
+          to find a Mach Five Wheels distributor near you.
+        </p>
+        <a href="/pages/dealer-locator.html" class="btn btn-primary"
+          >Find a Dealer</a
+        >
+      </div>
+    </section>
+
+    <!-- ZIP Modal -->
+    <div id="zipModal" class="zip-modal hidden" aria-hidden="true">
+      <div
+        class="zip-modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="zipTitle"
+      >
+        <h3 id="zipTitle">Enter Your Zip Code</h3>
+        <input
+          type="text"
+          id="zipInput"
+          placeholder="e.g. 90210"
+          maxlength="10"
+          inputmode="numeric"
+        />
+        <button id="submitZip" class="btn btn-secondary">Continue</button>
+      </div>
+    </div>
+
+    <!-- Data payloads for SearchSelect -->
+    <script id="countries-data" type="application/json">
+      [
+        "United States",
+        "Canada",
+        "United Kingdom",
+        "Germany",
+        "France",
+        "Italy",
+        "Spain",
+        "Netherlands",
+        "Sweden",
+        "Switzerland",
+        "Norway",
+        "Denmark",
+        "Belgium",
+        "Austria",
+        "Finland",
+        "Ireland",
+        "Portugal",
+        "Poland",
+        "Czech Republic",
+        "Japan",
+        "South Korea",
+        "China",
+        "India",
+        "Australia",
+        "New Zealand",
+        "United Arab Emirates",
+        "Saudi Arabia",
+        "Turkey",
+        "Singapore",
+        "Thailand",
+        "Brazil",
+        "South Africa",
+        "Mexico",
+        "Other"
+      ]
+    </script>
+
+    <script id="states-data" type="application/json">
+      [
+        "AL",
+        "AK",
+        "AZ",
+        "AR",
+        "CA",
+        "CO",
+        "CT",
+        "DE",
+        "FL",
+        "GA",
+        "HI",
+        "ID",
+        "IL",
+        "IN",
+        "IA",
+        "KS",
+        "KY",
+        "LA",
+        "ME",
+        "MD",
+        "MA",
+        "MI",
+        "MN",
+        "MS",
+        "MO",
+        "MT",
+        "NE",
+        "NV",
+        "NH",
+        "NJ",
+        "NM",
+        "NY",
+        "NC",
+        "ND",
+        "OH",
+        "OK",
+        "OR",
+        "PA",
+        "RI",
+        "SC",
+        "SD",
+        "TN",
+        "TX",
+        "UT",
+        "VT",
+        "VA",
+        "WA",
+        "WV",
+        "WI",
+        "WY"
+      ]
+    </script>
+
+    <script id="years-data" type="application/json">
+      [
+        "2026",
+        "2025",
+        "2024",
+        "2023",
+        "2022",
+        "2021",
+        "2020",
+        "2019",
+        "2018",
+        "2017",
+        "2016",
+        "2015",
+        "2014",
+        "2013",
+        "2012",
+        "2011",
+        "2010",
+        "2009",
+        "2008",
+        "2007",
+        "2006",
+        "2005",
+        "2004",
+        "2003",
+        "2002",
+        "2001",
+        "2000",
+        "1999",
+        "1998",
+        "1997",
+        "1996",
+        "1995",
+        "1994",
+        "1993",
+        "1992",
+        "1991",
+        "1990",
+        "Other"
+      ]
+    </script>
+
+    <!-- Curated, performance‑focused brands ONLY -->
+    <script id="brands-data" type="application/json">
+      [
+        {
+          "group": "Exotics / Hypercars",
+          "items": [
+            "Bugatti",
+            "Ferrari",
+            "Lamborghini",
+            "McLaren",
+            "Pagani",
+            "Koenigsegg",
+            "Rimac"
+          ]
+        },
+        {
+          "group": "Race & Track Specials",
+          "items": [
+            "Ariel",
+            "Caterham",
+            "Donkervoort",
+            "KTM",
+            "Radical",
+            "Ginetta"
+          ]
+        },
+        {
+          "group": "Core Euro Performance",
+          "items": [
+            "Alfa Romeo",
+            "Alpine",
+            "Aston Martin",
+            "Audi",
+            "BMW",
+            "Cupra",
+            "Jaguar",
+            "Lotus",
+            "Maserati",
+            "Mercedes-AMG",
+            "Porsche",
+            "Polestar",
+            "Volkswagen"
+          ]
+        },
+        { "group": "British Niche", "items": ["Bentley", "Morgan", "TVR"] },
+        {
+          "group": "US Performance",
+          "items": [
+            "Cadillac V",
+            "Chevrolet",
+            "Dodge",
+            "Ford",
+            "Hennessey",
+            "Tesla"
+          ]
+        },
+        {
+          "group": "Japan Performance",
+          "items": [
+            "Honda",
+            "Lexus F",
+            "Mazda",
+            "Nissan",
+            "Subaru",
+            "Toyota GR"
+          ]
+        },
+        { "group": "Other", "items": ["Other"] }
+      ]
+    </script>
+
+    <!-- Injected Footer -->
+    <footer id="footer"></footer>
+  </body>
+</html>
