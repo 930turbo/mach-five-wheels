@@ -1,137 +1,125 @@
-/* HAMBURGER: always centered icon */
+/* =====================================================
+   GLOBAL UI — Header, Burger, Mobile Drawer
+   Load this on every page BEFORE page-specific CSS.
+   ===================================================== */
+
+/* ---- Design tokens ---- */
+:root{
+  --m5-text: #fff;
+  --m5-bg: #000;
+  --m5-panel: rgba(15,15,15,0.72);
+  --m5-panel-strong: rgba(10,10,10,0.92);
+  --m5-border: rgba(255,255,255,0.12);
+  --m5-border-soft: rgba(255,255,255,0.08);
+  --m5-gold: #d2b15a;
+}
+
+/* ---- Base guards (non-invasive) ---- */
+html, body { max-width: 100%; overflow-x: hidden; background: var(--m5-bg); color: var(--m5-text); }
+*,
+*::before,
+*::after { box-sizing: border-box; }
+img, video, canvas { max-width: 100%; height: auto; display: block; }
+
+/* =====================================================
+   HEADER SHELL (shared)
+   ===================================================== */
+.site-header{
+  width: 100%;
+  background: #000;
+  color: var(--m5-text);
+  padding: 1.25rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  overflow-x: clip; /* safety */
+}
+.nav-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: .75rem;
+  overflow-x: clip; /* safety */
+}
+.logo{ flex: 0 0 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.logo a img{ height: 42px; width: auto; display: block; }
+
+/* wide navs shown on desktop by default */
+.nav-left, .nav-right{
+  display: flex;
+  gap: 2rem;
+  flex: 1 1 0;
+}
+.nav-left{ justify-content: flex-start; padding-left: 2rem; }
+.nav-right{ justify-content: flex-end; padding-right: 2rem; }
+.nav-left a, .nav-right a{
+  color: var(--m5-text);
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: .5px;
+  transition: color .25s ease, opacity .25s ease;
+}
+.nav-left a:hover, .nav-right a:hover{ color: var(--m5-gold); }
+
+/* =====================================================
+   HAMBURGER — single dash -> centered gold X
+   (button has NO inner spans; icon drawn with ::before/::after)
+   ===================================================== */
 .site-header .hamburger{
-  display:none;            /* shown under 900px via media query */
-  width:44px; height:44px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.12);
-  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  padding:0;
-  cursor:pointer;
+  position: relative;                 /* anchor pseudo-lines */
+  display: none;                      /* shown under 900px */
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--m5-border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  padding: 0;
+  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  display:inline-grid;                 /* center child */
-  place-items:center;                  /* 👈 center the bar/X */
-  transition:transform .18s, border-color .25s, background .25s, box-shadow .25s;
+  display: grid; place-items: center; /* center content */
+  transition: transform .18s, border-color .25s, background .25s, box-shadow .25s;
+}
+.site-header .hamburger:hover{
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,0.20);
 }
 
-.site-header .hamburger .bar{
-  position:relative;
-  width:22px; height:2px;              /* the “–” */
-  background:#fff; border-radius:2px;
-  box-shadow:0 0 1px rgba(0,0,0,.25);
-  transition:background .2s ease;
-}
-
-/* build the X from center with pseudo-lines */
-.site-header .hamburger .bar::before,
-.site-header .hamburger .bar::after{
-  content:"";
-  position:absolute;
-  left:50%; top:50%;
-  width:22px; height:2px;              /* same as bar */
-  background:#d2b15a; border-radius:2px;
-  transform-origin:center center;       /* pivot from true center */
-  transform: translate(-50%,-50%) rotate(0deg) scaleX(0); /* hidden */
-  opacity:0;
-  transition: transform .22s ease, opacity .18s ease, background .25s ease;
-}
-
-.site-header .hamburger[aria-expanded="true"] .bar{ background: transparent; }
-.site-header .hamburger[aria-expanded="true"] .bar::before{
-  opacity:1; transform: translate(-50%,-50%) rotate(45deg)  scaleX(1);
-}
-.site-header .hamburger[aria-expanded="true"] .bar::after{
-  opacity:1; transform: translate(-50%,-50%) rotate(-45deg) scaleX(1);
-}
-
-/* drawer panel spacing */
-.mobile-menu__panel{ padding:.75rem .75rem .9rem; gap:.5rem; }
-
-/* centered list; consistent spacing */
-.mobile-menu__list{
-  list-style:none; margin:0; padding:0;
-  display:grid;
-  justify-items:center;     /* center each item horizontally */
-  row-gap:.4rem;            /* adjust to taste (.3–.6rem) */
-}
-
-.mobile-menu__list li{ width:100%; display:flex; justify-content:center; }
-
-.mobile-menu__list a{
-  display:inline-flex;
-  justify-content:center; align-items:center; text-align:center;
-  padding:.7rem 1rem;      /* button padding */
-  min-width:min(86%, 520px);  /* keeps a nice centered column on wide phones */
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.04);
-  color:#fff; text-decoration:none; font-weight:600; letter-spacing:.02em;
-  line-height:1.1;
-  transition: transform .16s, border-color .25s, background .25s;
-}
-.mobile-menu__list a:hover{
-  transform:translateY(-1px);
-  border-color:rgba(210,177,90,.35);
-  background:rgba(255,255,255,.08);
-}
-
-/* footer buttons centered too */
-.mobile-menu__footer{
-  display:flex; justify-content:center; gap:.5rem; margin-top:.35rem;
-}
-.mobile-menu__footer .btn{
-  padding:.75rem 1rem; border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.06);
-  color:#fff; text-decoration:none; font-weight:700;
-}
-
-/* Button shell */
-.site-header .hamburger{
-  display:none;                 /* shown <900px in your media queries */
-  width:44px; height:44px;
-  box-sizing:border-box;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.12);
-  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  padding:0;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  display:grid; place-items:center;     /* hard center the icon */
-  transition:transform .18s, border-color .25s, background .25s, box-shadow .25s;
-}
-.site-header .hamburger:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.2); }
-
-/* Use the button's own ::before/::after as the lines */
+/* Draw lines from exact center so dash/X never drifts */
 .site-header .hamburger::before,
 .site-header .hamburger::after{
-  content:"";
-  position:absolute;
-  left:50%; top:50%;
-  width:22px; height:2px;             /* line thickness */
-  background:#fff;                     /* closed state color (dash) */
-  border-radius:2px;
-  transform-origin:center center;
-  /* center exactly on the button center — no offsets */
-  transform: translate(-50%,-50%);
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 22px; height: 2px;
+  border-radius: 2px;
+  transform-origin: center center;
+  transform: translate(-50%, -50%);  /* hard center */
   transition: transform .22s ease, opacity .18s ease, background .25s ease;
   will-change: transform;
 }
 
-/* Closed: show a single centered dash using ::after; hide ::before */
-.site-header .hamburger::before{ opacity:0; transform: translate(-50%,-50%) scaleX(0); }
-.site-header .hamburger::after { opacity:1; transform: translate(-50%,-50%); }
+/* CLOSED: show a single centered dash (use ::after), hide ::before */
+.site-header .hamburger::before{
+  opacity: 0;
+  transform: translate(-50%, -50%) scaleX(0);
+}
+.site-header .hamburger::after{
+  opacity: 1;
+  background: #fff; /* dash color */
+}
 
-/* Open: turn into a centered gold X using both lines */
+/* OPEN: centered gold X using both lines */
 .site-header .hamburger[aria-expanded="true"]::before,
 .site-header .hamburger[aria-expanded="true"]::after{
-  background:#d2b15a;  /* gold X */
-  opacity:1;
+  opacity: 1;
+  background: var(--m5-gold);
 }
 .site-header .hamburger[aria-expanded="true"]::before{
-  transform: translate(-50%,-50%) rotate(45deg);
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 .site-header .hamburger[aria-expanded="true"]::after{
-  transform: translate(-50%,-50%) rotate(-45deg);
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 /* Optional subtle glow while open */
@@ -140,4 +128,108 @@
   box-shadow:
     0 0 0 1px rgba(210,177,90,0.25) inset,
     0 10px 34px rgba(210,177,90,0.18);
+}
+
+/* =====================================================
+   MOBILE MENU / DRAWER
+   (markup: <nav id="mobileMenu" class="mobile-menu" hidden> … )
+   ===================================================== */
+.mobile-menu[hidden]{ display: none; }
+.mobile-menu{
+  position: fixed; inset: 0; z-index: 2000;
+  display: grid;
+  grid-template-columns: 1fr minmax(280px, min(82vw, 380px));
+}
+.mobile-menu__backdrop{
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity .28s ease;
+}
+.mobile-menu__panel{
+  position: relative;
+  background: var(--m5-panel-strong);
+  border-left: 1px solid var(--m5-border-soft);
+  transform: translateX(100%);
+  transition: transform .28s ease;
+  box-shadow: -24px 0 60px rgba(0,0,0,.55);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: .5rem;
+  padding: .75rem .75rem .9rem;
+}
+
+/* Open state (JS adds .open) */
+.mobile-menu.open .mobile-menu__backdrop{ opacity: 1; }
+.mobile-menu.open .mobile-menu__panel{ transform: translateX(0); }
+
+/* Header row inside panel (keep, but no “X” button) */
+.mobile-menu__head{ min-height: .25rem; }
+
+/* Centered, compact link list */
+.mobile-menu__list{
+  list-style: none; margin: 0; padding: 0;
+  display: grid;
+  justify-items: center;       /* center each item */
+  row-gap: .4rem;              /* link spacing */
+}
+.mobile-menu__list li{ width: 100%; display: flex; justify-content: center; }
+.mobile-menu__list a{
+  display: inline-flex;
+  justify-content: center; align-items: center; text-align: center;
+  padding: .7rem 1rem;
+  min-width: min(86%, 520px);  /* nice centered column on wide phones */
+  border-radius: 12px;
+  border: 1px solid var(--m5-border-soft);
+  background: rgba(255,255,255,.04);
+  color: var(--m5-text);
+  text-decoration: none;
+  font-weight: 600; letter-spacing: .02em;
+  line-height: 1.1;
+  transition: transform .16s, border-color .25s, background .25s, color .25s;
+}
+.mobile-menu__list a:hover{
+  transform: translateY(-1px);
+  border-color: rgba(210,177,90,.35);
+  background: rgba(255,255,255,.08);
+}
+
+/* Footer actions (optional) */
+.mobile-menu__footer{
+  display: flex; justify-content: center; gap: .5rem; margin-top: .35rem;
+}
+.mobile-menu__footer .btn{
+  padding: .75rem 1rem; border-radius: 999px;
+  border: 1px solid var(--m5-border);
+  background: rgba(255,255,255,.06);
+  color: var(--m5-text);
+  text-decoration: none; font-weight: 700;
+  transition: transform .16s, border-color .25s, background .25s;
+}
+.mobile-menu__footer .btn:hover{
+  transform: translateY(-1px);
+  border-color: rgba(210,177,90,.35);
+  background: rgba(255,255,255,.10);
+}
+
+/* Prevent background scroll when drawer is open (JS toggles .menu-open on <body>) */
+body.menu-open{ overflow: hidden; }
+
+/* Safe sizing */
+@media (max-width: 360px){
+  .mobile-menu{ grid-template-columns: 1fr 88vw; }
+}
+
+/* =====================================================
+   RESPONSIVE VISIBILITY (shared)
+   ===================================================== */
+/* Desktop defaults (already in header styles): wide navs visible, burger hidden */
+
+/* Mobile: show burger, hide wide navs */
+@media (max-width: 900px){
+  .site-header .hamburger{ display: grid; }
+  .site-header .nav-left,
+  .site-header .nav-right{ display: none; }
+  .logo{ flex: 1 1 auto; }
+  .nav-container{ justify-content: space-between; }
 }
