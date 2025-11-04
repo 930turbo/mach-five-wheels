@@ -2033,3 +2033,22 @@ html, body { overflow-x: hidden; max-width: 100%; }
     height: 40px;
   }
 }
+
+/* ✅ Force hero dots to center, ignoring earlier duplicates */
+.hero-slider .slider-nav{
+  position: absolute;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 58px;                 /* or whatever you want */
+  transform: none !important;
+  width: fit-content !important;/* don't clamp to 220px */
+  margin: 0 auto !important;    /* centers the fit-content block */
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;                  /* pick your gap */
+}
+
+/* kill the “safety clamp” width that was applied to both nav & progress */
+.hero-slider .slider-progress{
+  width: 220px; /* keep your progress width */
+}
