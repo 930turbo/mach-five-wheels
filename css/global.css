@@ -269,3 +269,126 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
     transform: translateX(2px);             /* keep that smidge right */
   }
 }
+
+/* ============================================
+   FINAL ADJUSTMENT — HOME PAGE LOGO (MOBILE)
+   ============================================ */
+@media (max-width: 900px) {
+  body.home .nav-container {
+    justify-content: flex-start !important;           /* push content left */
+    padding-left: max(6px, env(safe-area-inset-left));/* tighter gutter */
+  }
+
+  body.home .logo {
+    margin-right: auto;
+    justify-content: flex-start !important;
+    align-items: center;
+    padding-left: 0;                                  /* ensure no inner offset */
+  }
+
+  body.home .logo a img {
+    height: 120px !important;                          /* keep large */
+    width: auto;
+    transform: translateX(0);                         /* no right shift */
+    object-fit: contain;
+  }
+}
+
+/* ============================================
+   HOME PAGE — MOBILE ONLY: hard-left, larger
+   ============================================ */
+@media (max-width: 900px){
+  body.home .nav-container{
+    justify-content: space-between !important;         /* logo left, burger right */
+    padding-left: max(6px, env(safe-area-inset-left)); /* tiny safe gutter */
+  }
+
+  /* KEY FIX: stop .logo from growing/centering */
+  body.home .logo{
+    flex: 0 0 auto !important;      /* override earlier flex: 1 1 auto */
+    align-items: flex-start !important;
+    text-align: left;
+    margin-right: auto;              /* keeps burger on the right */
+    padding-left: 0 !important;
+  }
+
+  body.home .logo a{
+    display: flex;
+    align-items: center;
+  }
+
+  body.home .logo a img{
+    height: 90px !important;         /* keep it large */
+    width: auto;
+    transform: none !important;      /* no centering nudge */
+    object-fit: contain;
+  }
+}
+
+/* ============================================
+   HOME PAGE — MOBILE HEADER SIZE + LOGO BALANCE
+   ============================================ */
+@media (max-width: 900px) {
+  /* Match header height to other pages */
+  body.home .site-header {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+
+  body.home .nav-container {
+    align-items: center;
+    min-height: auto;
+    padding-left: max(6px, env(safe-area-inset-left)); /* safe edge gap */
+    justify-content: space-between !important;
+  }
+
+  /* Keep logo positioned hard-left but allow full height */
+  body.home .logo {
+    flex: 0 0 auto !important;
+    justify-content: flex-start !important;
+    align-items: center;
+    padding-left: 0 !important;
+    margin-right: auto;
+  }
+
+  /* Logo scaling: fill height visually */
+  body.home .logo a img {
+    height: 70px !important;        /* fills header like other pages */
+    width: auto;
+    transform: none !important;
+    object-fit: contain;
+  }
+
+  /* Ensure burger stays aligned on the right */
+  body.home .hamburger {
+    margin-left: auto;
+  }
+}
+
+/* ============================================
+   FORCE MOBILE HEADER STATE (ALL PAGES)
+   ============================================ */
+@media (max-width: 900px){
+  /* Button must be visible on mobile, no matter what */
+  .site-header .hamburger{
+    display: grid !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin-left: auto;                 /* push to the far right */
+  }
+
+  /* Wide navs must be hidden on mobile */
+  .site-header .nav-left,
+  .site-header .nav-right{
+    display: none !important;
+  }
+
+  /* Ensure layout leaves space for the burger on the right */
+  .site-header .nav-container{
+    justify-content: space-between !important;
+    align-items: center;
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    gap: .75rem;
+  }
+}

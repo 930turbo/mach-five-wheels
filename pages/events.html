@@ -4,14 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Events | Mach Five Wheels</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../css/events.css" />
-      <link rel="stylesheet" href="../css/global.css">
 
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet"/>
+
+  <!-- Global FIRST, then page CSS -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/events.css" />
+
+  <!-- Header/Drawer JS (shared) -->
+  <script src="../js/index.js" defer></script>
+
+  <!-- Page-local safety: keep header on top; prevent hero from blocking clicks on mobile -->
+  <style>
+    .site-header { position: sticky; top: 0; z-index: 1000; }
+    @media (max-width: 900px){
+      .event-hero, .event-hero .hero-overlay { pointer-events: none; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- HEADER (inline, not injected) -->
+  <!-- HEADER -->
   <header class="site-header">
     <div class="nav-container">
       <nav class="nav-left">
@@ -23,12 +37,17 @@
         <a href="/index.html">
           <img src="/assets/logos/machfivelogo.png" alt="Mach Five Wheels Logo" />
         </a>
+        <!-- If your script injects "Explore Mach Five", it will appear under here on desktop -->
       </div>
 
       <nav class="nav-right">
-        <a href="/pages/events.html">Events</a>
+        <a href="/pages/events.html" aria-current="page">Events</a>
         <a href="/pages/contact.html">Contact</a>
       </nav>
+
+      <!-- Hamburger (mobile only via CSS) -->
+      <button class="hamburger" id="menuToggle"
+        aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu"></button>
     </div>
   </header>
 
@@ -40,7 +59,7 @@
     </div>
   </section>
 
-  <!-- FILTER / SEARCH TOOLBAR (STATIC) -->
+  <!-- FILTER / SEARCH TOOLBAR -->
   <section class="events-toolbar" aria-label="Event filters">
     <div class="toolbar-inner">
       <div class="filters">
@@ -58,10 +77,10 @@
   <main class="events-list" id="eventsRoot">
     <h2>Appearances</h2>
 
-    <!-- Event -->
-    <article class="event-card" data-date="2025-11-04" data-tags="trade-show; debut; porsche">
+    <!-- Example Event -->
+    <article class="event-card" data-date="2026-08-07" data-tags="hillclimb; racing; porsche">
       <aside class="event-date">
-        <span class="day">07 - 09</span>
+        <span class="day">07 – 09</span>
         <span class="mon">AUG</span>
         <span class="yr">2026</span>
       </aside>
@@ -75,14 +94,14 @@
         </header>
         <p class="meta">
           <span class="location">Mount Washington</span>
-          <span class="date-range">August 7-9, 2026</span>
+          <span class="date-range">August 7–9, 2026</span>
         </p>
         <p class="desc">
-          Join us at Mount Washington to see Chris Fren's 991 GT3R Evo race to the top fitted with our CRE991 Two-Piece wheels.
+          Join us at Mount Washington to see Chris Fren's 991 GT3R Evo charge to the summit on CRE991 Two-Piece wheels.
         </p>
       </div>
       <figure class="event-image">
-        <img src="../assets/images/mwhc26.png" alt="SEMA Show display" loading="lazy"/>
+        <img src="../assets/images/mwhc26.png" alt="Mount Washington Hillclimb poster" loading="lazy"/>
       </figure>
     </article>
 
@@ -95,7 +114,7 @@
     <a href="../pages/contact.html" class="btn-primary">Contact Us</a>
   </section>
 
-  <!-- FOOTER (inline, not injected) -->
+  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="footer-container">
       <div class="footer-left">© Mach Five Wheels</div>
@@ -108,13 +127,12 @@
     </div>
   </footer>
 
-  <!-- Minimal filter/search logic -->
+  <!-- FILTER/SEARCH LOGIC -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const buttons = Array.from(document.querySelectorAll('.chip'));
       const cards = Array.from(document.querySelectorAll('.event-card'));
       const searchInput = document.getElementById('eventSearch');
-
       const today = new Date(); today.setHours(0,0,0,0);
 
       function isUpcoming(card){ const d = new Date(card.dataset.date); d.setHours(0,0,0,0); return d >= today; }
@@ -150,5 +168,51 @@
       apply();
     });
   </script>
+
+  <!-- Mobile Menu Drawer (one per page) -->
+  <nav class="mobile-menu" id="mobileMenu" hidden>
+    <div class="mobile-menu__backdrop"></div>
+    <div class="mobile-menu__panel">
+      <div class="mobile-menu__head"></div>
+      <ul class="mobile-menu__list">
+        <li><a href="/pages/catalog.html">Catalog</a></li>
+        <li><a href="/pages/about.html">About</a></li>
+        <li><a href="/pages/events.html">Events</a></li>
+        <li><a href="/pages/contact.html">Contact</a></li>
+      </ul>
+      <div class="mobile-menu__footer">
+        <a class="btn" href="https://machfivemotors.com">Back to Mach Five Motors</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Fallback wire-up (in case index.js isn't loaded yet on this page) -->
+  <script>
+    (function () {
+      function qs(s, r=document){ return r.querySelector(s); }
+      const btn  = qs('#menuToggle');
+      const menu = qs('#mobileMenu');
+      const back = qs('.mobile-menu__backdrop');
+      if (!btn || !menu) return;
+
+      const OPEN_CLS = 'open';
+      function openMenu(){
+        menu.hidden = false;
+        menu.classList.add(OPEN_CLS);
+        btn.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('menu-open');
+      }
+      function closeMenu(){
+        menu.classList.remove(OPEN_CLS);
+        btn.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('menu-open');
+        setTimeout(() => { if (!menu.classList.contains(OPEN_CLS)) menu.hidden = true; }, 300);
+      }
+      btn.addEventListener('click', () => menu.classList.contains(OPEN_CLS) ? closeMenu() : openMenu());
+      if (back) back.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.classList.contains(OPEN_CLS)) closeMenu(); });
+    })();
+  </script>
+
 </body>
 </html>
