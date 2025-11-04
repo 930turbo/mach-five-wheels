@@ -278,3 +278,38 @@ body.menu-open{ overflow: hidden; }
      (even though it’s hidden, this prevents layout shove when toggling) */
   .nav-left { padding-left: 0 !important; }
 }
+
+/* ===============================================
+   HEADER MOBILE FIX — home page + all others
+   =============================================== */
+@media (max-width: 900px) {
+  /* keep hamburger aligned right */
+  .site-header .nav-container {
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem; /* gives even edge space */
+  }
+
+  /* always force logo to the hard left edge */
+  .logo {
+    justify-content: flex-start !important;
+    align-items: center;
+  }
+
+  /* make sure the logo image fits nicely and doesn’t crop */
+  .logo a img {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  /* home page only: slightly larger logo */
+  body.home .logo a img {
+    height: 60px;
+  }
+
+  /* hide the Explore Mach Five button on mobile only */
+  .logo .main-site-btn {
+    display: none !important;
+  }
+}
