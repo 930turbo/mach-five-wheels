@@ -401,7 +401,7 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
      1200px is a good default for big desktop monitors. */
 
   .site-header .logo a img {
-    height: 65px !important; /* up from ~52px; scale to taste (68–80px looks good) */
+    height: 60px !important; /* up from ~52px; scale to taste (68–80px looks good) */
     width: auto;
     transition: height 0.3s ease;
   }
