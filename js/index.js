@@ -338,34 +338,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Mobile drawer controls
 const menuBtn = document.getElementById('menuToggle');
-const drawer = document.getElementById('mobileMenu');
+const drawer  = document.getElementById('mobileMenu');
 const backdrop = drawer ? drawer.querySelector('.mobile-menu__backdrop') : null;
-const closeBtn = drawer ? drawer.querySelector('.mobile-menu__close') : null;
+const links = drawer ? drawer.querySelectorAll('.mobile-menu__list a') : [];
 
-function openMenu() {
-  if (!drawer) return;
+function openMenu(){
+  if(!drawer) return;
   drawer.hidden = false;
   requestAnimationFrame(() => drawer.classList.add('open'));
-  menuBtn?.setAttribute('aria-expanded', 'true');
+  menuBtn?.setAttribute('aria-expanded','true');
   document.body.classList.add('menu-open');
 }
 
-function closeMenu() {
-  if (!drawer) return;
+function closeMenu(){
+  if(!drawer) return;
   drawer.classList.remove('open');
-  menuBtn?.setAttribute('aria-expanded', 'false');
+  menuBtn?.setAttribute('aria-expanded','false');
   document.body.classList.remove('menu-open');
-  setTimeout(() => { drawer.hidden = true; }, 280); // match CSS transition
+  setTimeout(() => { drawer.hidden = true; }, 280);
 }
 
 menuBtn?.addEventListener('click', () => {
-  const expanded = menuBtn.getAttribute('aria-expanded') === 'true';
-  expanded ? closeMenu() : openMenu();
+  const open = menuBtn.getAttribute('aria-expanded') === 'true';
+  open ? closeMenu() : openMenu();
 });
-backdrop?.addEventListener('click', closeMenu);
-closeBtn?.addEventListener('click', closeMenu);
 
-// Escape to close
+backdrop?.addEventListener('click', closeMenu);
+
+// close the drawer when a nav link is tapped
+links.forEach(a => a.addEventListener('click', closeMenu));
+
+// ESC closes
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && drawer && !drawer.hidden) closeMenu();
+  if(e.key === 'Escape' && drawer && !drawer.hidden) closeMenu();
 });
