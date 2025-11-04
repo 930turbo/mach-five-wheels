@@ -1391,6 +1391,7 @@ text-shadow:
   0 0 1px rgba(0,0,0,.6),
   0 8px 28px rgba(0,0,0,.45);
 transform: translateY(-2%); /* 👈 move text upward */
+}
 
 .series-section .series-card:hover > a::after {
   opacity: 1;
