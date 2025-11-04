@@ -392,3 +392,33 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
     gap: .75rem;
   }
 }
+
+/* ============================================
+   DESKTOP — ENLARGE LOGO ABOVE EXPLORE BUTTON
+   ============================================ */
+@media (min-width: 1200px) {
+  /* Adjust breakpoint to whatever feels like “full screen” for you — 
+     1200px is a good default for big desktop monitors. */
+
+  .site-header .logo a img {
+    height: 72px !important; /* up from ~52px; scale to taste (68–80px looks good) */
+    width: auto;
+    transition: height 0.3s ease;
+  }
+
+  /* Keep the layout stable while the logo grows */
+  .site-header .logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem; /* keeps spacing between logo and Explore button */
+  }
+
+  /* Center and slightly space the Explore button */
+  .site-header .logo .header-link-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: .25rem;
+  }
+}
