@@ -1,9 +1,9 @@
 /* =====================================================
-   GLOBAL UI — Header, Burger, Mobile Drawer
+   GLOBAL UI — Header, Burger, Mobile Drawer (CLEAN)
    Load this on every page BEFORE page-specific CSS.
    ===================================================== */
 
-/* ---- Design tokens ---- */
+/* ---- Tokens ---- */
 :root{
   --m5-text: #fff;
   --m5-bg: #000;
@@ -14,15 +14,13 @@
   --m5-gold: #d2b15a;
 }
 
-/* ---- Base guards (non-invasive) ---- */
+/* ---- Base guards ---- */
 html, body { max-width: 100%; overflow-x: hidden; background: var(--m5-bg); color: var(--m5-text); }
-*,
-*::before,
-*::after { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; }
 img, video, canvas { max-width: 100%; height: auto; display: block; }
 
 /* =====================================================
-   HEADER SHELL (shared)
+   HEADER SHELL
    ===================================================== */
 .site-header{
   width: 100%;
@@ -33,27 +31,40 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
   top: 0;
   z-index: 1000;
   border-bottom: 1px solid rgba(255,255,255,0.1);
-  overflow-x: clip; /* safety */
 }
 .nav-container{
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; /* mobile default */
   width: 100%;
   gap: .75rem;
-  overflow-x: clip; /* safety */
 }
-.logo{ flex: 0 0 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.logo a img{ height: 42px; width: auto; display: block; }
 
-/* wide navs shown on desktop by default */
+/* Logo: never crop, predictable sizing */
+.logo{
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;       /* centered by default (desktop rules will handle final centering) */
+  overflow: visible !important;  /* never clip */
+  text-align: center;
+}
+.logo a, .logo img { display: block; }
+.logo a img{
+  width: auto;
+  height: 42px;                  /* base; overridden per breakpoint/page */
+  object-fit: contain;
+}
+
+/* Wide navs (desktop default) */
 .nav-left, .nav-right{
   display: flex;
   gap: 2rem;
   flex: 1 1 0;
 }
 .nav-left{ justify-content: flex-start; padding-left: 2rem; }
-.nav-right{ justify-content: flex-end; padding-right: 2rem; }
+.nav-right{ justify-content: flex-end;   padding-right: 2rem; }
 .nav-left a, .nav-right a{
   color: var(--m5-text);
   text-decoration: none;
@@ -64,12 +75,10 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
 .nav-left a:hover, .nav-right a:hover{ color: var(--m5-gold); }
 
 /* =====================================================
-   HAMBURGER — single dash -> centered gold X
-   (button has NO inner spans; icon drawn with ::before/::after)
+   HAMBURGER (uses ::before/::after)
    ===================================================== */
 .site-header .hamburger{
-  position: relative;                 /* anchor pseudo-lines */
-  display: none;                      /* shown under 900px */
+  position: relative;
   width: 44px; height: 44px;
   border-radius: 12px;
   border: 1px solid var(--m5-border);
@@ -77,62 +86,44 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
   padding: 0;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  display: grid; place-items: center; /* center content */
+  display: none;                 /* desktop default: hidden */
+  place-items: center;
   transition: transform .18s, border-color .25s, background .25s, box-shadow .25s;
 }
 .site-header .hamburger:hover{
   transform: translateY(-1px);
   border-color: rgba(255,255,255,0.20);
 }
-
-/* Draw lines from exact center so dash/X never drifts */
 .site-header .hamburger::before,
 .site-header .hamburger::after{
-  content: "";
+  content:"";
   position: absolute;
   left: 50%; top: 50%;
   width: 22px; height: 2px;
   border-radius: 2px;
-  transform-origin: center center;
-  transform: translate(-50%, -50%);  /* hard center */
+  transform-origin: center;
+  transform: translate(-50%, -50%); /* hard center */
   transition: transform .22s ease, opacity .18s ease, background .25s ease;
-  will-change: transform;
 }
 
-/* CLOSED: show a single centered dash (use ::after), hide ::before */
-.site-header .hamburger::before{
-  opacity: 0;
-  transform: translate(-50%, -50%) scaleX(0);
-}
-.site-header .hamburger::after{
-  opacity: 1;
-  background: #fff; /* dash color */
-}
+/* Closed: single dash (after), before hidden */
+.site-header .hamburger::before{ opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
+.site-header .hamburger::after{  opacity: 1; background: #fff; }
 
-/* OPEN: centered gold X using both lines */
+/* Open: centered gold X */
 .site-header .hamburger[aria-expanded="true"]::before,
 .site-header .hamburger[aria-expanded="true"]::after{
-  opacity: 1;
-  background: var(--m5-gold);
+  opacity: 1; background: var(--m5-gold);
 }
-.site-header .hamburger[aria-expanded="true"]::before{
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-.site-header .hamburger[aria-expanded="true"]::after{
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-
-/* Optional subtle glow while open */
+.site-header .hamburger[aria-expanded="true"]::before{ transform: translate(-50%, -50%) rotate(45deg); }
+.site-header .hamburger[aria-expanded="true"]::after{  transform: translate(-50%, -50%) rotate(-45deg); }
 .site-header .hamburger[aria-expanded="true"]{
   border-color: rgba(210,177,90,0.45);
-  box-shadow:
-    0 0 0 1px rgba(210,177,90,0.25) inset,
-    0 10px 34px rgba(210,177,90,0.18);
+  box-shadow: 0 0 0 1px rgba(210,177,90,0.25) inset, 0 10px 34px rgba(210,177,90,0.18);
 }
 
 /* =====================================================
-   MOBILE MENU / DRAWER
-   (markup: <nav id="mobileMenu" class="mobile-menu" hidden> … )
+   MOBILE DRAWER
    ===================================================== */
 .mobile-menu[hidden]{ display: none; }
 .mobile-menu{
@@ -158,34 +149,22 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
   gap: .5rem;
   padding: .75rem .75rem .9rem;
 }
-
-/* Open state (JS adds .open) */
 .mobile-menu.open .mobile-menu__backdrop{ opacity: 1; }
 .mobile-menu.open .mobile-menu__panel{ transform: translateX(0); }
-
-/* Header row inside panel (keep, but no “X” button) */
 .mobile-menu__head{ min-height: .25rem; }
-
-/* Centered, compact link list */
 .mobile-menu__list{
   list-style: none; margin: 0; padding: 0;
-  display: grid;
-  justify-items: center;       /* center each item */
-  row-gap: .4rem;              /* link spacing */
+  display: grid; justify-items: center; row-gap: .4rem;
 }
 .mobile-menu__list li{ width: 100%; display: flex; justify-content: center; }
 .mobile-menu__list a{
-  display: inline-flex;
-  justify-content: center; align-items: center; text-align: center;
-  padding: .45rem 1rem;
-  min-width: min(86%, 520px);  /* nice centered column on wide phones */
+  display: inline-flex; justify-content: center; align-items: center; text-align: center;
+  padding: .45rem 1rem; min-width: min(86%, 520px);
   border-radius: 12px;
   border: 1px solid var(--m5-border-soft);
   background: rgba(255,255,255,.04);
   color: var(--m5-text);
-  text-decoration: none;
-  font-weight: 600; letter-spacing: .02em;
-  line-height: 1.1;
+  text-decoration: none; font-weight: 600; letter-spacing: .02em; line-height: 1.1;
   transition: transform .16s, border-color .25s, background .25s, color .25s;
 }
 .mobile-menu__list a:hover{
@@ -193,8 +172,6 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
   border-color: rgba(210,177,90,.35);
   background: rgba(255,255,255,.08);
 }
-
-/* Footer actions (optional) */
 .mobile-menu__footer{
   display: flex; justify-content: center; gap: .5rem; margin-top: .35rem;
 }
@@ -202,8 +179,7 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
   padding: .75rem 1rem; border-radius: 999px;
   border: 1px solid var(--m5-border);
   background: rgba(255,255,255,.06);
-  color: var(--m5-text);
-  text-decoration: none; font-weight: 700;
+  color: var(--m5-text); text-decoration: none; font-weight: 700;
   transition: transform .16s, border-color .25s, background .25s;
 }
 .mobile-menu__footer .btn:hover{
@@ -212,234 +188,84 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
   background: rgba(255,255,255,.10);
 }
 
-/* Prevent background scroll when drawer is open (JS toggles .menu-open on <body>) */
-body.menu-open{ overflow: hidden; }
-
-/* Safe sizing */
-@media (max-width: 360px){
-  .mobile-menu{ grid-template-columns: 1fr 88vw; }
-}
-
 /* =====================================================
-   RESPONSIVE VISIBILITY (shared)
+   RESPONSIVE RULES
    ===================================================== */
-/* Desktop defaults (already in header styles): wide navs visible, burger hidden */
 
-/* Mobile: show burger, hide wide navs */
-@media (max-width: 900px){
-  .site-header .hamburger{ display: grid; }
-  .site-header .nav-left,
-  .site-header .nav-right{ display: none; }
-  .logo{ flex: 1 1 auto; }
-  .nav-container{ justify-content: space-between; }
-}
-
-/* ===========================
-   HEADER — MOBILE FIXES ONLY
-   =========================== */
-@media (max-width: 900px) {
-  /* keep hamburger visible per your rules, push it to the far right */
-  .site-header .hamburger { display: grid; margin-left: auto; }
-
-  /* hide wide navs on mobile (already in your css, safe to reassert) */
-  .site-header .nav-left,
-  .site-header .nav-right { display: none; }
-
-  /* left-justify the header row on mobile so the logo sits flush-left */
-  .nav-container {
-    justify-content: flex-start;   /* instead of space-between */
-    gap: .75rem;
-  }
-
-  /* make the logo truly left on all pages (mobile only) */
-  .logo {
-    flex: 0 0 auto;
-    justify-content: flex-start !important;
-    align-items: center;
-  }
-
-  /* default mobile logo size for non-home pages */
-  .logo a img {
-    height: 48px;
-    width: auto;
-  }
-
-  /* HOME ONLY: make the logo larger on mobile */
-  body.home .logo a img {
-    height: 56px; /* tweak as you like: 56–64px looks good */
-  }
-
-  /* hide the Explore/Main-site button that gets injected near the logo */
-  .logo .main-site-btn {
-    display: none !important;
-  }
-
-  /* remove extra left padding from the left nav container on mobile
-     (even though it’s hidden, this prevents layout shove when toggling) */
-  .nav-left { padding-left: 0 !important; }
-}
-
-/* ===============================================
-   HEADER MOBILE FIX — home page + all others
-   =============================================== */
-@media (max-width: 900px) {
-  /* keep hamburger aligned right */
-  .site-header .nav-container {
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.25rem; /* gives even edge space */
-  }
-
-  /* always force logo to the hard left edge */
-  .logo {
-    justify-content: flex-start !important;
-    align-items: center;
-  }
-
-  /* make sure the logo image fits nicely and doesn’t crop */
-  .logo a img {
-    height: 48px;
-    width: auto;
-    object-fit: contain;
-  }
-
-  /* home page only: slightly larger logo */
-  body.home .logo a img {
-    height: 60px;
-  }
-
-  /* hide the Explore Mach Five button on mobile only */
-  .logo .main-site-btn {
-    display: none !important;
-  }
-}
-
-/* =========================
-   QUICK FIXES / OVERRIDES
-   ========================= */
-
-/* 1) Burger should NOT show on desktop */
-.site-header .hamburger {
-  display: none;               /* desktop default */
-}
-@media (max-width: 900px){
-  .site-header .hamburger {    /* mobile only */
-    display: grid;
-  }
-}
-
-/* 2) Stop cutting off the logo anywhere */
-.logo { 
-  overflow: visible !important; 
-}
-.logo a, 
-.logo img {
-  display: block;
-}
-
-/* 3) HOME PAGE (desktop/tablet): logo hard-left and larger */
-body.home .nav-container {
-  justify-content: flex-start;       /* line up from the left */
-  gap: 2rem;
-}
-body.home .logo {
-  order: -1;                         /* put logo first visually */
-  margin-right: 2rem;
-  justify-content: flex-start !important;
-  align-items: center;
-}
-body.home .logo a img {
-  height: 60px;                      /* bump size on home */
-  width: auto;
-}
-
-/* Keep normal size on other pages (desktop) */
-body:not(.home) .logo a img {
-  height: 48px;                      /* you can tweak to match “larger” target */
-  width: auto;
-}
-
-/* 4) Mobile behavior stays: logo flush-left, larger on home */
-@media (max-width: 900px){
-  .site-header .nav-container{
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.25rem;
-  }
-  .logo{
-    justify-content: flex-start !important;
-    align-items: center;
-  }
-  .logo a img{
-    height: 48px;
-    width: auto;
-    object-fit: contain;             /* prevent any crop */
-  }
-  body.home .logo a img{
-    height: 60px;                    /* home bigger on mobile */
-  }
-  .site-header .nav-left,
-  .site-header .nav-right{
-    display: none !important;        /* ensure wide navs are hidden on mobile */
-  }
-}
-
-
-/* =========================
-   HEADER TWEAKS
-   ========================= */
-
-/* 1) Desktop & larger: keep LOGO + Explore button centered */
+/* ---------- Desktop & large (≥901px) ---------- */
+/* Center the middle column (Logo + injected Explore button) */
 @media (min-width: 901px){
   .nav-container{
-    justify-content: center;       /* centers the middle column */
-    gap: 2rem;
+    justify-content: center;    /* center the middle column */
+    align-items: center;
+    gap: 1.75rem;
   }
+  /* Equal wings so center truly sits in the middle */
   .nav-left, .nav-right{
-    flex: 1 1 0;                   /* equal wings so center stays centered */
+    flex: 1 1 0;
+    display: flex;
+    gap: 2rem;
+    padding: 0;                 /* remove side paddings that can bias centering */
   }
+  .nav-left{ justify-content: flex-start; }
+  .nav-right{ justify-content: flex-end; }
+
+  /* Center column */
   .logo{
     flex: 0 0 auto;
-    align-items: center;
     justify-content: center !important;
-    overflow: visible !important;
+    align-items: center;
     text-align: center;
+    padding: 0;
   }
-  /* If your injected Explore button sits inside .logo, center it too */
-  .logo .header-link-wrapper{
+  .logo .header-link-wrapper{   /* your injected Explore button wrapper */
     display: flex;
     justify-content: center;
     margin-top: .35rem;
   }
+
+  /* Desktop logo size (all pages) */
+  .logo a img{ height: 52px; }
+
+  /* Burger hidden on desktop */
+  .site-header .hamburger{ display: none !important; }
 }
 
-/* 2) Mobile: nudge logo slightly right so it’s not clipped on the left,
-      and respect notches/safe areas */
+/* ---------- Mobile (≤900px) ---------- */
+/* Show burger, hide wide navs, keep logo from clipping left edge */
 @media (max-width: 900px){
-  .site-header .nav-container{
-    padding-left: max(10px, env(safe-area-inset-left)); /* tiny left gutter */
-    padding-right: max(12px, env(safe-area-inset-right));
+  .site-header .hamburger{ display: grid !important; }
+  .site-header .nav-left,
+  .site-header .nav-right{ display: none !important; }
+
+  .nav-container{
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem max(12px, env(safe-area-inset-right)) 1rem max(12px, env(safe-area-inset-left));
   }
-  .logo{
-    overflow: visible !important;
-    padding-left: 2px;                 /* micro offset */
-  }
+
+  /* Slight nudge right so no device trims the left edge */
+  .logo{ padding-left: 2px; }               /* micro gutter */
   .logo a img{
-    transform: translateX(2px);        /* “smidge” shift right */
-    height: 48px;                      /* your mobile size */
-    width: auto;
-    object-fit: contain;
+    transform: translateX(2px);             /* “smidge” right */
+    height: 48px;                            /* default mobile size */
+  }
+
+  /* Hide the injected Explore button on mobile */
+  .logo .main-site-btn,
+  .logo .header-link-wrapper{ display: none !important; }
+}
+
+/* ---------- HOME (INDEX) specific tweaks ---------- */
+/* On HOME mobile: bigger and flush-left */
+@media (max-width: 900px){
+  body.home .nav-container{ justify-content: flex-start; }
+  body.home .logo{
+    margin-right: auto;                     /* leaves room for burger on the right */
+    justify-content: flex-start !important; /* hard left */
   }
   body.home .logo a img{
-    height: 60px;                      /* larger on home (mobile) */
+    height: 64px;                           /* larger on home mobile */
+    transform: translateX(2px);             /* keep that smidge right */
   }
 }
-
-/* 3) Safety: burger stays hidden on desktop */
-.site-header .hamburger{ display: none; }
-@media (max-width: 900px){
-  .site-header .hamburger{ display: grid; }
-}
-
-/* 4) Never crop the logo anywhere */
-.logo{ overflow: visible !important; }
