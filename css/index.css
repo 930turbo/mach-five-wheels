@@ -1554,43 +1554,36 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
   }
 }
 
-/* ================== HARD OVERRIDES (place LAST) ================== */
+/* === FINAL HEADER VISIBILITY OVERRIDES === */
+.site-header .hamburger { display: none !important; } /* desktop default: hidden */
+.site-header .nav-left,
+.site-header .nav-right { display: flex !important; } /* desktop default: show */
 
-/* 1) Burger only on mobile, keep full nav on desktop */
-.site-header .hamburger { display: none !important; }              /* desktop default: hidden */
+/* Mobile: show burger, hide wide navs */
 @media (max-width: 900px) {
-  .site-header .hamburger { display: inline-flex !important; }     /* show burger on mobile */
+  .site-header .hamburger { display: inline-flex !important; }
   .site-header .nav-left,
-  .site-header .nav-right { display: none !important; }            /* hide wide navs on mobile */
+  .site-header .nav-right { display: none !important; }
   .site-header .logo { flex: 1 1 auto; }
+  .nav-container { gap: .75rem; justify-content: space-between; }
 }
-/* ensure desktop navs stay visible even if earlier CSS hid them */
+
+/* Desktop: reassert full navs, keep burger hidden */
 @media (min-width: 901px) {
+  .site-header .hamburger { display: none !important; }
   .site-header .nav-left,
   .site-header .nav-right { display: flex !important; }
 }
 
-/* 2) Header horizontal overflow killers */
+/* Safety: clamp header width to prevent stray overflow */
 html, body { overflow-x: hidden; max-width: 100%; }
 .site-header, .nav-container { overflow-x: clip; max-width: 100vw; }
 
-/* If ANYTHING pushed width (gaps/padding/scale), these clamp it */
-.nav-container { gap: 1rem; }
-
-/* 3) Logo scaling was causing overflow — neutralize it */
+/* Ensure logo scaling never causes overflow */
 .site-header .logo { overflow: hidden; }
 .site-header .logo a img {
-  transform: none !important;     /* remove previous scale(1.75) */
+  transform: none !important;
   height: 42px !important;
   width: auto !important;
   display: block;
 }
-
-/* 4) Safety nets for other suspects */
-.banner, .lightbox, .lightbox-content, #lightbox-img { max-width: 100vw !important; }
-img, video, canvas { max-width: 100%; height: auto; display: block; }
-
-/* Some browsers mis-measure 100vw due to scrollbars; this avoids 1px creep */
-*,
-*::before,
-*::after { box-sizing: border-box; }

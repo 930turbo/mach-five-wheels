@@ -2,7 +2,10 @@
 // Mach Five Wheels — Main JS (Index)
 // Header/Footer, Hero Slider, Zip Modal, Feature Gallery
 // + Force scroll to top on refresh / navigation
+// + Final header UI sync (burger only on mobile)
 // =====================================================
+
+"use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
   const inPages = location.pathname.includes("/pages/");
@@ -31,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     toTop();
   });
 
-  // Optional: if anchors are yanking you down on first paint, uncomment:
+  // If anchors yank you on first paint, you can strip the hash:
   /*
   if (location.hash) {
     history.replaceState(null, "", location.pathname + location.search);
@@ -39,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   */
 
   // ------------------------------
-  // Inject Header & Footer (then ensure top)
+  // Inject Header & Footer
   // ------------------------------
   const headerPromise = fetch(`${base}partials/header.html`)
     .then(res => res.text())
@@ -66,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // === Mobile Menu Setup (moved from stray .then) ===
+      // === Mobile Menu Setup ===
       const burger = document.querySelector(".hamburger");
       const menu   = document.getElementById("mobileMenu");
       const list   = menu?.querySelector(".mobile-menu__list");
@@ -117,6 +120,24 @@ document.addEventListener("DOMContentLoaded", () => {
           const a = e.target.closest("a");
           if (a) closeMenu();
         });
+
+        // --- Final UI sync so burger/menus never appear together ---
+        const syncHeaderUI = () => {
+          const isMobile = window.matchMedia("(max-width: 900px)").matches;
+          if (!isMobile) {
+            // desktop: make sure drawer is closed and burger looks collapsed
+            burger.setAttribute("aria-expanded", "false");
+            document.body.classList.remove("menu-open");
+            if (menu) { menu.classList.remove("open"); menu.hidden = true; }
+          }
+          // mobile: CSS already hides wide navs & shows burger; no-op
+        };
+
+        // run once after header inject
+        syncHeaderUI();
+        // keep in sync on resize/orientation changes
+        window.addEventListener("resize", syncHeaderUI);
+        window.addEventListener("orientationchange", syncHeaderUI);
       }
     })
     .catch(() => { /* no-op */ });
@@ -148,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!slides.length || !dots.length || !bar) return;
 
     let index = 0;
-    const intervalMs = 4000; // matches --hero-interval
+    const intervalMs = 4000; // match CSS --hero-interval
     let timer;
 
     const setActive = (i) => {
