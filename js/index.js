@@ -27,8 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // On full load and when restored from bfcache
   window.addEventListener("load", toTop);
-  window.addEventListener("pageshow", (e) => {
-    // When coming back from bfcache, some browsers keep position—override
+  window.addEventListener("pageshow", () => {
     toTop();
   });
 
@@ -65,6 +64,59 @@ document.addEventListener("DOMContentLoaded", () => {
             </a>`;
           logoDiv.appendChild(btnWrapper);
         }
+      }
+
+      // === Mobile Menu Setup (moved from stray .then) ===
+      const burger = document.querySelector(".hamburger");
+      const menu   = document.getElementById("mobileMenu");
+      const list   = menu?.querySelector(".mobile-menu__list");
+      const close  = menu?.querySelector(".mobile-menu__close");
+
+      if (burger && menu && list) {
+        // Build list from left/right navs present in injected header
+        const left  = Array.from(document.querySelectorAll(".nav-left a"));
+        const right = Array.from(document.querySelectorAll(".nav-right a"));
+        const all   = [...left, ...right];
+
+        list.innerHTML = all.map(a => {
+          const href = a.getAttribute("href") || "#";
+          const text = (a.textContent || href).trim();
+          return `<li><a href="${href}">${text}</a></li>`;
+        }).join("");
+
+        const openMenu = () => {
+          menu.hidden = false;
+          requestAnimationFrame(() => {
+            menu.classList.add("open");
+            burger.setAttribute("aria-expanded", "true");
+            document.body.classList.add("menu-open");
+          });
+        };
+        const closeMenu = () => {
+          menu.classList.remove("open");
+          burger.setAttribute("aria-expanded", "false");
+          document.body.classList.remove("menu-open");
+          // Wait for transition before hiding
+          setTimeout(() => (menu.hidden = true), 280);
+        };
+
+        burger.addEventListener("click", () => {
+          const expanded = burger.getAttribute("aria-expanded") === "true";
+          expanded ? closeMenu() : openMenu();
+        });
+        close?.addEventListener("click", closeMenu);
+        menu.addEventListener("click", (e) => {
+          if (e.target === menu || e.target.hasAttribute("data-close")) closeMenu();
+        });
+        // Close on ESC
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !menu.hidden) closeMenu();
+        });
+        // Close after navigating
+        list.addEventListener("click", (e) => {
+          const a = e.target.closest("a");
+          if (a) closeMenu();
+        });
       }
     })
     .catch(() => { /* no-op */ });
@@ -277,4 +329,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 50);
   })();
 });
-
