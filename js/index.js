@@ -334,3 +334,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 50);
   })();
 });
+
+
+// Mobile drawer controls
+const menuBtn = document.getElementById('menuToggle');
+const drawer = document.getElementById('mobileMenu');
+const backdrop = drawer ? drawer.querySelector('.mobile-menu__backdrop') : null;
+const closeBtn = drawer ? drawer.querySelector('.mobile-menu__close') : null;
+
+function openMenu() {
+  if (!drawer) return;
+  drawer.hidden = false;
+  requestAnimationFrame(() => drawer.classList.add('open'));
+  menuBtn?.setAttribute('aria-expanded', 'true');
+  document.body.classList.add('menu-open');
+}
+
+function closeMenu() {
+  if (!drawer) return;
+  drawer.classList.remove('open');
+  menuBtn?.setAttribute('aria-expanded', 'false');
+  document.body.classList.remove('menu-open');
+  setTimeout(() => { drawer.hidden = true; }, 280); // match CSS transition
+}
+
+menuBtn?.addEventListener('click', () => {
+  const expanded = menuBtn.getAttribute('aria-expanded') === 'true';
+  expanded ? closeMenu() : openMenu();
+});
+backdrop?.addEventListener('click', closeMenu);
+closeBtn?.addEventListener('click', closeMenu);
+
+// Escape to close
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && drawer && !drawer.hidden) closeMenu();
+});

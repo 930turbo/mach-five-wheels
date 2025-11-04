@@ -1177,40 +1177,39 @@ html, body {
   }
 }
 
-/* ---------- Engineering block cleanup ---------- */
+/* ENGINEERING: mobile-first stack */
 .about--engineer {
   display: flex;
-  flex-direction: row; /* keep text first, image second */
-  align-items: center;
-  gap: 2.25rem;
-  padding: 4rem 2rem;
-  background: #000;
-  flex-wrap: nowrap; /* never stack */
+  flex-direction: column;   /* stack on mobile */
+  align-items: stretch;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+  overflow-x: clip;
 }
 
-.about--engineer .about-text {
-  flex: 1 1 50%;
-  min-width: 280px;
-}
-
+.about--engineer .about-text,
 .about--engineer .about-image {
-  flex: 1 1 20%;
-  min-width: 280px;
-  order: 2; /* ensures image stays on the right */
+  flex: 1 1 auto;
+  min-width: 0;             /* allow shrink; prevents overflow */
 }
 
 .about--engineer .about-image img {
+  display: block;
   width: 100%;
   height: auto;
   border-radius: 12px;
 }
 
-/* Tighten spacing for small screens but keep horizontal layout */
-@media (max-width: 600px) {
+/* desktop: side-by-side */
+@media (min-width: 981px) {
   .about--engineer {
-    padding: 2rem 1rem;
-    gap: 1rem;
+    flex-direction: row;    /* row on desktop */
+    align-items: center;
+    gap: 2.25rem;
+    padding: 4rem 2rem;
   }
+  .about--engineer .about-text { flex: 1 1 50%; }
+  .about--engineer .about-image { flex: 1 1 50%; }
 }
 
 /* shared transparent luxe button (global, not hero-scoped) */
@@ -1872,4 +1871,110 @@ html, body { overflow-x: hidden; max-width: 100%; }
     max-width: 100%;
     height: auto;
   }
+}
+
+/* Button shell */
+.site-header .hamburger{
+  display:none; /* shown under 900px via media query you already have */
+  width:44px; height:44px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  padding:0;
+  cursor:pointer;
+  outline:none;
+  -webkit-tap-highlight-color: transparent;
+  display:inline-grid; place-items:center;
+  transition: transform .18s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease;
+}
+.site-header .hamburger:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.2); }
+.site-header .hamburger:active{ transform: translateY(0); }
+
+/* The ONE line */
+.site-header .hamburger .bar{
+  position:relative;
+  width:22px; height:2px;
+  background:#fff; border-radius:2px;
+  transition: background .2s ease, box-shadow .25s ease;
+  box-shadow: 0 0 1px rgba(0,0,0,.25);
+}
+
+/* Create the "X" using pseudo elements (hidden when closed) */
+.site-header .hamburger .bar::before,
+.site-header .hamburger .bar::after{
+  content:"";
+  position:absolute; inset:0;
+  background:#d2b15a;            /* gold X */
+  border-radius:2px;
+  transform: rotate(0) scaleX(0); /* hidden line */
+  opacity:0;
+  transition: transform .22s ease, opacity .18s ease, background .25s ease;
+}
+
+/* OPEN STATE: hide center line, show angled lines as an X */
+.site-header .hamburger[aria-expanded="true"] .bar{ background: transparent; }
+.site-header .hamburger[aria-expanded="true"] .bar::before{
+  opacity:1; transform: rotate(45deg) scaleX(1);
+}
+.site-header .hamburger[aria-expanded="true"] .bar::after{
+  opacity:1; transform: rotate(-45deg) scaleX(1);
+}
+
+/* Subtle glow when open */
+.site-header .hamburger[aria-expanded="true"]{
+  border-color: rgba(210,177,90,0.45);
+  box-shadow:
+    0 0 0 1px rgba(210,177,90,0.25) inset,
+    0 10px 34px rgba(210,177,90,0.18);
+}
+
+/* Panel padding a touch tighter */
+.mobile-menu__panel{
+  padding: 1rem 1rem 1.1rem;
+  gap: .75rem;
+}
+
+/* Centered, clean links */
+.mobile-menu__list{
+  list-style:none;
+  margin:.25rem 0 0;
+  padding:0;
+  display:grid;
+  gap:.5rem;
+}
+.mobile-menu__list a{
+  display:flex;
+  justify-content:center;     /* center text */
+  align-items:center;
+  text-align:center;
+  padding:.9rem 1rem;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+  color:#fff; text-decoration:none; font-weight:600;
+  letter-spacing:.02em; line-height:1.15;
+  transition: transform .16s ease, border-color .25s ease, background .25s ease, color .25s ease;
+}
+.mobile-menu__list a:hover{
+  transform: translateY(-1px);
+  border-color: rgba(210,177,90,.35);
+  background: rgba(255,255,255,.08);
+}
+
+/* If you added chevrons before, remove them for a cleaner look */
+.mobile-menu__list a::after{ content:none; }
+
+/* Footer buttons match spacing */
+.mobile-menu__footer{ gap:.5rem; }
+.mobile-menu__footer .btn{
+  padding:.85rem 1rem;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  font-weight:700;
+  text-decoration:none;
+}
+.mobile-menu__footer .btn:hover{
+  border-color: rgba(210,177,90,.35);
+  background: rgba(255,255,255,.1);
 }
