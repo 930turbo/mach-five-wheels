@@ -632,29 +632,54 @@ a.btn-secondary,
   }
 }
 
-/* === M5CR991: stack config UNDER the gallery and center it === */
-.product-panel{
+/* === Corrected two-column product panel === */
+.product-panel {
   display: grid;
-  grid-template-columns: 1fr !important; /* single column on all screens */
-  justify-items: center;                  /* center each section */
+  grid-template-columns: 1fr 1fr;     /* side by side */
+  justify-content: center;
   align-items: start;
-  gap: 1.75rem;                           /* space between image and options */
+  gap: 2rem;
+  padding: 2.25rem 0;
+  max-width: 1100px;                  /* keeps layout from becoming massive */
+  margin: 0 auto;                     /* center whole block */
 }
 
-/* keep the hero image LARGE; tune max-width as you like */
-.gallery{
-  max-width: 820px !important;  /* big image width */
+/* Both columns same width */
+.gallery,
+.config-card {
+  max-width: 480px;                   /* MATCH WIDTH HERE */
   width: 100%;
-  margin: 0 auto;
 }
 
-/* center the options panel under the image */
-.config-card{
-  max-width: 560px;             /* narrower than image for nice hierarchy */
+/* Keep hero image scaled naturally */
+.gallery .hero-image {
   width: 100%;
-  margin: 0 auto;               /* centers within the grid cell */
-  text-align: left;             /* keep text left-aligned */
+  border-radius: 20px;
+  overflow: hidden;
+}
+.gallery .hero-image img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
-/* thumbnails stay centered under the hero image */
-.thumbs{ justify-content: center; }
+/* Center thumbs below image */
+.thumbs {
+  display: flex;
+  justify-content: center;
+  gap: .75rem;
+  margin-top: 1rem;
+}
+
+/* Responsive: stack on mobile */
+@media (max-width: 900px) {
+  .product-panel {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .gallery,
+  .config-card {
+    max-width: 90%;
+  }
+}
