@@ -172,12 +172,12 @@ html, body {
 
 .nav-left a:hover,
 .nav-right a:hover {
-  color: #897106;
+  color: #e5b615;
 }
 
 /* Warranty page: gold Contact Page link */
 .terms-content a[href$="contact.html"] {
-  color: #897106;
+  color: #e5b615;
   font-weight: 600;
   text-decoration: none;
 }

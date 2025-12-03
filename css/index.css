@@ -77,7 +77,7 @@ html, body {
 
 .nav-left a:hover,
 .nav-right a:hover {
-  color: #897106;
+  color: #e5b615;
 }
 
 /* ===== HERO SECTION ===== */
@@ -133,7 +133,7 @@ html, body {
 
 .btn-primary:hover,
 .btn-primary:focus-visible {
-  background-color: #897106;             /* brand gold on hover */
+  background-color: #e5b615;             /* brand gold on hover */
   color: #000;                            /* keep text dark */
   transform: translateY(-2px) scale(1.05);/* lift and enlarge */
   box-shadow: 0 6px 18px rgba(0,0,0,0.35);
@@ -481,9 +481,9 @@ html, body {
 
 .dealer-cta .btn-primary:hover,
 .dealer-cta .btn-primary:focus-visible {
-  background-color: #897106;
+  background-color: #e5b615;
   color: #000;
-  border-color: #897106;
+  border-color: #e5b615;
   transform: translateY(-2px) scale(1.05);
   box-shadow: 0 6px 18px rgba(0,0,0,0.35);
 }
@@ -955,31 +955,6 @@ html, body {
   font-style: italic;
 }
 
-.header-link-wrapper {
-  flex: none;          /* replaces flex-basis:100% */
-  margin-top: 1rem;  /* keep your spacing */
-  text-align: center;
-}
-
-.main-site-btn {
-  display: inline-block;
-  padding: 0.4rem 1.2rem;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  font-weight: bold;
-  border: 1px solid #897106;
-  color: #897106;
-  background-color: transparent;
-  text-decoration: none;
-  border-radius: 4px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.main-site-btn:hover {
-  background-color: #897106;
-  color: #000;
-}
-
 /* ─────────────────────────────────────────────────────
    Wheel Series Section
 ───────────────────────────────────────────────────── */
@@ -1082,7 +1057,7 @@ html, body {
 .series-info h3 {
   font-size: 1.25rem;
   margin-bottom: 0.75rem;
-  color: #897106;
+  color: #e5b615;
 }
 .series-info p {
   font-size: 0.95rem;
@@ -1153,7 +1128,7 @@ html, body {
 }
 
 .ig-follow:hover {
-  color: #897106; /* gold accent */
+  color: #e5b615; /* gold accent */
 }
 
 .ig-arrow {
@@ -1261,7 +1236,7 @@ html, body {
   font-size: .8rem;
   letter-spacing: .22em;
   text-transform: uppercase;
-  color: #897106;
+  color: #e5b615;
   margin-bottom: .6rem;
   opacity: .9;
   font-weight: 700; /* bold */
@@ -1531,15 +1506,6 @@ html, body { max-width: 100%; overflow-x: hidden; }
 /* Anything that could bleed gets clipped */
 .site-header, .nav-container, .hero-slider, .banner, .gallery-grid { overflow-x: clip; }
 
-/* Logo scaling was causing overflow: remove transform and clip inside logo */
-.site-header .logo { overflow: hidden; }
-.site-header .logo a img {
-  transform: none !important;   /* was scale(1.75) */
-  height: 42px;                 /* keep the intended size */
-  width: auto;
-  display: block;
-}
-
 /* Extra guard for super narrow viewports */
 img, video, canvas { max-width: 100%; height: auto; display: block; }
 
@@ -1578,15 +1544,6 @@ img, video, canvas { max-width: 100%; height: auto; display: block; }
 /* Safety: clamp header width to prevent stray overflow */
 html, body { overflow-x: hidden; max-width: 100%; }
 .site-header, .nav-container { overflow-x: clip; max-width: 100vw; }
-
-/* Ensure logo scaling never causes overflow */
-.site-header .logo { overflow: hidden; }
-.site-header .logo a img {
-  transform: none !important;
-  height: 42px !important;
-  width: auto !important;
-  display: block;
-}
 
 /* ===========================
    Luxe Burger + Drawer Styles
@@ -1979,61 +1936,6 @@ html, body { overflow-x: hidden; max-width: 100%; }
   background: rgba(255,255,255,.1);
 }
 
-/* === Home hero: left rail (logo + Explore Mach Five) === */
-.hero-slider {
-  position: relative;
-}
-
-.hero-left-rail {
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
-  z-index: 15;                   /* above slide media/text */
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.hero-left-logo img {
-  height: 48px;
-  width: auto;
-  display: block;
-}
-
-/* Button styling mirrors your transparent buttons but left-justified */
-.hero-left-main-site {
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  padding: 0.55rem 0.9rem;
-  border: 1px solid #fff;
-  color: #fff;
-  text-decoration: none;
-  transition: all 0.25s ease;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-}
-
-.hero-left-main-site:hover {
-  background: #fff;
-  color: #000;
-}
-
-/* Hide Explore Mach Five ONLY on mobile */
-@media (max-width: 768px) {
-  .hero-left-main-site {
-    display: none;
-  }
-  .hero-left-rail {
-    top: 1.25rem;
-    left: 1rem;
-  }
-  .hero-left-logo img {
-    height: 40px;
-  }
-}
-
 /* ✅ Force hero dots to center, ignoring earlier duplicates */
 .hero-slider .slider-nav{
   position: absolute;
@@ -2051,4 +1953,19 @@ html, body { overflow-x: hidden; max-width: 100%; }
 /* kill the “safety clamp” width that was applied to both nav & progress */
 .hero-slider .slider-progress{
   width: 220px; /* keep your progress width */
+}
+
+.logo {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.logo img {
+  height: 42px;
+  display: block;
+}
+
+.site-header .logo a img {
+  transform: scale(1.75);
+  transform-origin: center;
 }

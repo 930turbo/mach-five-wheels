@@ -177,12 +177,12 @@ html, body {
 
 .nav-left a:hover,
 .nav-right a:hover {
-  color: #897106;
+  color: #e5b615;
 }
 
 /* Legal Notice: gold “Contact Page” link */
 .terms-wrapper .terms-content a[href$="contact.html"] {
-  color: #897106;
+  color: #e5b615;
   font-weight: 600;
   text-decoration: none;
 }

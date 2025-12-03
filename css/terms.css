@@ -169,7 +169,7 @@ html, body {
 
 .nav-left a:hover,
 .nav-right a:hover {
-  color: #897106;
+  color: #e5b615;
 }
 
 .dealer-cta {
@@ -229,7 +229,7 @@ html, body {
 
 /* Terms & Conditions: gold “contact page” link */
 .terms-content a[href$="contact.html"] {
-  color: #897106;
+  color: #e5b615;
   font-weight: 600;
   text-decoration: none;
 }

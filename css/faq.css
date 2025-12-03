@@ -61,7 +61,7 @@ html, body {
 }
 
 .faq-question:hover {
-  color: #897106;
+  color: #e5b615;
 }
 
 .faq-question::after {
@@ -201,7 +201,7 @@ html, body {
 
 .nav-left a:hover,
 .nav-right a:hover {
-  color: #897106;
+  color: #e5b615;
 }
 
 .dealer-cta {

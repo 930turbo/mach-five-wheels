@@ -8,7 +8,7 @@
   --muted:#b9b9b9;
   --soft:#dcdcdc;
   --line:rgba(255,255,255,.08);
-  --gold:#897106;
+  --gold:#e5b615;
   --panel:rgba(255,255,255,.03);
   --panel-border:rgba(255,255,255,.07);
   --shadow:0 10px 30px rgba(0,0,0,.5);
@@ -214,7 +214,7 @@ a.btn-primary,a.btn-ghost,.btn-primary,.btn-ghost{
 .cta-panel .btn-primary:hover {
   transform: translateY(-2px) scale(1.03);
   box-shadow: 0 0 18px rgba(137, 113, 6, 0.55);
-  background: linear-gradient(135deg, #a78b09, #897106); /* matches gradient format */
+  background: linear-gradient(135deg, #a78b09, #e5b615); /* matches gradient format */
   border-color: #a78b09;
 }
 
@@ -340,5 +340,5 @@ a.btn-primary,a.btn-ghost,.btn-primary,.btn-ghost{
 
 .nav-left a:hover,
 .nav-right a:hover {
-  color: #897106;
+  color: #e5b615;
 }

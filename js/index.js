@@ -39,21 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!mount) return;
       mount.innerHTML = html;
 
-      // Home-only button under logo
-      const isHome = location.pathname === "/" || location.pathname.endsWith("/index.html");
-      if (isHome) {
-        const logoDiv = document.querySelector(".logo");
-        if (logoDiv && !logoDiv.querySelector(".main-site-btn")) {
-          const wrap = document.createElement("div");
-          wrap.className = "header-link-wrapper";
-          wrap.innerHTML = `
-            <a href="https://machfivemotors.com" class="main-site-btn" target="_blank" rel="noopener">
-              Explore Mach Five
-            </a>`;
-          logoDiv.appendChild(wrap);
-        }
-      }
-
       // ====== Burger / Drawer ======
       const burger   = document.getElementById("menuToggle") || document.querySelector(".hamburger");
       const menu     = document.getElementById("mobileMenu");

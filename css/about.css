@@ -1,6 +1,6 @@
 :root{
   --bg:#000; --panel:#0b0b0b; --panel-2:#111; --line:#222;
-  --fg:#fff; --muted:#bfbfbf; --muted-2:#8e8e8e; --gold:#897106;
+  --fg:#fff; --muted:#bfbfbf; --muted-2:#8e8e8e; --gold:#e5b615;
   --radius:14px; --radius-sm:10px; --shadow:0 18px 60px rgba(0,0,0,.45);
   --glass:rgba(255,255,255,0.04);
 }
@@ -127,7 +127,7 @@ a{text-decoration:none;color:inherit}
 .nav-left{justify-content:flex-start;padding-left:2rem}
 .nav-right{justify-content:flex-end;padding-right:2rem}
 .nav-left a,.nav-right a{color:#fff;text-decoration:none;font-weight:600;letter-spacing:.5px;transition:color .3s ease}
-.nav-left a:hover,.nav-right a:hover{color:#897106}
+.nav-left a:hover,.nav-right a:hover{color:#e5b615}
 
 /* ===== FOOTER ===== */
 .site-footer{width:100%;padding:1.5rem 2rem;background:#111;color:#aaa;display:flex;justify-content:center;align-items:center}
