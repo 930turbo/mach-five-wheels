@@ -14,7 +14,12 @@ export const config = {
 /* ---------- Constants ---------- */
 const MAX_FILES = 8;
 const MAX_FILE_MB = 10;
-const ACCEPTED_MIME = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+const ACCEPTED_MIME = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+]);
 
 /* ---------- Helpers ---------- */
 const sanitize = (s = "") => String(s).replace(/[\r\n]+/g, " ").trim();
@@ -32,20 +37,28 @@ function parseMultipart(req) {
     const attachments = [];
     let fileCount = 0;
 
-    bb.on("field", (name, val) => (fields[name] = val));
+    bb.on("field", (name, val) => {
+      fields[name] = val;
+    });
 
     bb.on("file", (name, file, info) => {
       if (fileCount >= MAX_FILES) return file.resume();
+
       const { filename, mimeType } = info;
       if (!ACCEPTED_MIME.has(mimeType)) return file.resume();
 
       const chunks = [];
       let total = 0;
+
       file.on("data", (chunk) => {
         total += chunk.length;
-        if (total > MAX_FILE_MB * 1024 * 1024) file.resume();
-        else chunks.push(chunk);
+        if (total > MAX_FILE_MB * 1024 * 1024) {
+          file.resume();
+        } else {
+          chunks.push(chunk);
+        }
       });
+
       file.on("end", () => {
         if (total > 0) {
           attachments.push({
@@ -55,11 +68,13 @@ function parseMultipart(req) {
           });
         }
       });
+
       fileCount++;
     });
 
     bb.on("error", reject);
     bb.on("finish", () => resolve({ fields, attachments }));
+
     req.pipe(bb);
   });
 }
@@ -67,10 +82,14 @@ function parseMultipart(req) {
 /* ---------- URL-encoded / JSON Parser ---------- */
 async function parseNonMultipart(req) {
   const ctype = (req.headers["content-type"] || "").toLowerCase();
-  if (ctype.includes("application/json")) return { fields: req.body || {}, attachments: [] };
+
+  if (ctype.includes("application/json")) {
+    return { fields: req.body || {}, attachments: [] };
+  }
 
   let body = "";
   for await (const chunk of req) body += chunk;
+
   return { fields: parseQS(body), attachments: [] };
 }
 
@@ -82,7 +101,8 @@ export default async function handler(req, res) {
   }
 
   const ctype = (req.headers["content-type"] || "").toLowerCase();
-  let fields = {}, attachments = [];
+  let fields = {};
+  let attachments = [];
 
   try {
     if (ctype.startsWith("multipart/form-data")) {
@@ -98,7 +118,6 @@ export default async function handler(req, res) {
   /* ---------- Honeypot ---------- */
   const hp = (fields.website || fields.company || "").toString().trim();
   if (hp !== "") {
-    // redirect back to the same page (reload)
     res.statusCode = 303;
     res.setHeader("Location", req.headers.referer || "/");
     return res.end();
@@ -120,9 +139,12 @@ export default async function handler(req, res) {
     const phone = sanitize(fields.phone);
     const message = sanitize(fields.message);
 
-    if (!business || !contact || !emailRaw || !message)
+    if (!business || !contact || !emailRaw || !message) {
       return res.status(400).send("Please fill in all required fields.");
-    if (!isEmail(emailRaw)) return res.status(400).send("Invalid email address.");
+    }
+    if (!isEmail(emailRaw)) {
+      return res.status(400).send("Invalid email address.");
+    }
 
     replyToEmail = emailRaw;
     textBody = `Business Name: ${business}
@@ -147,10 +169,15 @@ ${message}`;
     const model = sanitize(fields.vehicle_model);
     const comments = sanitize(fields.comments);
 
-    if (!first || !last || !emailRaw || !confirm)
+    if (!first || !last || !emailRaw || !confirm) {
       return res.status(400).send("Please fill in all required fields.");
-    if (emailRaw !== confirm) return res.status(400).send("Emails do not match.");
-    if (!isEmail(emailRaw)) return res.status(400).send("Invalid email address.");
+    }
+    if (emailRaw !== confirm) {
+      return res.status(400).send("Emails do not match.");
+    }
+    if (!isEmail(emailRaw)) {
+      return res.status(400).send("Invalid email address.");
+    }
 
     replyToEmail = emailRaw;
     textBody = `Name: ${first} ${last}
@@ -170,29 +197,51 @@ ${comments}`;
   }
 
   /* ---------- Resend Setup ---------- */
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const TO_EMAIL = process.env.TO_EMAIL || "crew@machfivemotors.com";
-  const FROM_EMAIL = process.env.FROM_EMAIL || "no-reply@machfivewheels.com";
+  const FROM_EMAIL = process.env.FROM_EMAIL || "no-reply@m5wheels.com";
+
+  if (!RESEND_API_KEY) {
+    console.error("Missing RESEND_API_KEY");
+    return res.status(500).send("Email service not configured.");
+  }
+  if (!FROM_EMAIL) {
+    console.error("Missing FROM_EMAIL");
+    return res.status(500).send("Email service not configured.");
+  }
+
+  const resend = new Resend(RESEND_API_KEY);
 
   try {
     await resend.emails.send({
-      from: `"${sanitize(fields.first_name || fields.business || "Website User")}" <${FROM_EMAIL}>`,
+      from: `"${sanitize(
+        fields.first_name || fields.business || "Website User"
+      )}" <${FROM_EMAIL}>`,
       to: [TO_EMAIL],
       subject,
       text: textBody,
       reply_to: isEmail(replyToEmail) ? replyToEmail : undefined,
-      attachments: attachments.map((a) => ({
-        filename: a.filename,
-        content: a.content.toString("base64"),
-      })),
+      attachments:
+        attachments.length > 0
+          ? attachments.map((a) => ({
+              filename: a.filename,
+              content: a.content.toString("base64"),
+              contentType: a.contentType,
+            }))
+          : undefined,
     });
 
-    // ✅ Redirect back to same page (reload)
     res.statusCode = 303;
     res.setHeader("Location", req.headers.referer || "/");
     return res.end();
   } catch (err) {
-    console.error("Resend error:", err);
-    return res.status(500).send("Something went wrong. Please try again later.");
+    console.error("Resend error:", {
+      message: err?.message,
+      response: err?.response?.data || err?.response,
+      stack: err?.stack,
+    });
+    return res
+      .status(500)
+      .send("Something went wrong sending your message. Please try again.");
   }
 }
